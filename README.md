@@ -1,8 +1,8 @@
 EAD (module for Omeka S)
 ========================
 
-[EAD] is a module for [Omeka S] that allows to import EAD inside Omeka and to
-display them.
+[EAD] is a module for [Omeka S] that allows to import, update and delete EAD
+metadata inside Omeka and to display them.
 
 
 Installation
@@ -37,19 +37,52 @@ A xslt 2 processor may need to be installed too. See install help of [Bulk Impor
 Usage
 -----
 
-Import the xml ead (format 2002), then browse the items.
+### Management
 
-By default, the relations are displayed in the standard block "Linked resources"
-of the items. To see the full tree structure and the other relations, the theme
-may be updated to use the view helper `$this->ead($item)`.
+A new menu item is available in the admin sidebar, `EAD curation`.
 
-Note about EAD files.
+The process is based on EAD 2002 standard. The form allows to import, update or
+delete items. Just set a file or a url and select options.
+
+An important option is the base id. In EAD 2002, the individual components have
+no individual id, so they should be created. They are created with the format
+`base_id/xpath/to/component`, for example `FA-1/ead/archdesc/dsc/c[2]/c[5]/c[1]`.
+So it requires a common base id, that can be the document uri, the filename, an
+internal id or a custom id. It must be the same between each process, since this
+value is used to update or to delete existing items.
+
+The custom id is a choice from the attributes of the element `/ead/eadheader/eadid`.
+For example, if this element has these attributes:
+```php
+[
+    'identifier' => 'alpha',
+    'mainagencycode' => 'beta',
+    'url' => 'https://example.org/gamma',
+]
+```
+
+Then, to set `my_base_id` as base id, the option should be:
+
+```
+alpha = my_base_id
+```
+
+This process allows to manage metadata of multiple finding aids easily, but will
+be simplified in a future version.
+
+### Note about EAD files.
 
 Some ead files cannot be imported: some parsers don’t manage the doctype,
 require the namespace, or don’t manage entities or cdata. Furthermore, a secure
 server (https) may not be able to fetch an unsecure dtd (http). A quick fix is
 available, but if it is not enough, you have to remove doctype and entities and
 to add the namespace.
+
+### Display
+
+By default, the relations are displayed in the standard block "Linked resources"
+of the items. To see the full tree structure and the other relations, the theme
+may be updated to use the view helper `$this->ead($item)`.
 
 
 TODO
@@ -60,6 +93,7 @@ TODO
   plugin Ead.
 * Replace textual properties by a single property saved as literal xml with
   module RdfDatatype.
+* Simplify creation of custom id.
 
 
 Warning

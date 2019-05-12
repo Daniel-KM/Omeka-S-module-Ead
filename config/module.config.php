@@ -52,7 +52,7 @@ return [
     'navigation' => [
         'AdminModule' => [
             [
-                'label' => 'EAD import', // @translate
+                'label' => 'EAD curation', // @translate
                 'route' => 'admin/ead',
             ],
         ],

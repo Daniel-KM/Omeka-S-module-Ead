@@ -13,6 +13,26 @@ class ImportForm extends Form
         // The action attribute is set via the controller.
 
         $this->add([
+            'name' => 'action',
+            'type' => Element\Radio::class,
+            'options' => [
+                'label' => 'Action', // @translate
+                'info' => 'The update and deletion of resources uses their original identifiers, so they should not be changed.', // @translate
+                'value_options' => [
+                    \BulkImport\Processor\AbstractProcessor::ACTION_CREATE => 'Create new resources', // @translate
+                    \BulkImport\Processor\AbstractProcessor::ACTION_DELETE => 'Delete resources', // @translate
+                    \BulkImport\Processor\AbstractProcessor::ACTION_SKIP => 'Skip entries (dry run)', // @translate
+                ],
+            ],
+            'attributes' => [
+                'id' => 'action',
+                'multiple' => false,
+                'required' => true,
+                'class' => 'chosen-select',
+            ],
+        ]);
+
+        $this->add([
             'name' => 'file',
             'type' => Element\File::class,
             'options' => [

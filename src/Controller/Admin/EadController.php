@@ -176,9 +176,22 @@ class EadController extends AbstractActionController
             );
             $message->setEscapeHtml(false);
             $this->messenger()->addSuccess($message);
-            $this->messenger()->addNotice('The process is done in two steps: import of all pieces as items, then creation of the tree structure to link them.'); // @translate
+            $action = $args['action'];
+            switch ($action) {
+                default:
+                case \BulkImport\Processor\AbstractProcessor::ACTION_CREATE:
+                    $this->messenger()->addNotice('The process is done in two steps: extraction of all pieces as items, then creation of the tree structure to link them.'); // @translate
+                    break;
+                case \BulkImport\Processor\AbstractProcessor::ACTION_DELETE:
+                    $this->messenger()->addNotice('The process is done in two steps: extraction of all pieces as items, then deletion.'); // @translate
+                    break;
+            }
+            if ($action === \BulkImport\Processor\AbstractProcessor::ACTION_CREATE) {
+            } else {
+                $this->messenger()->addNotice('The process is done in two steps: extraction of all pieces as items, then process of the tree structure to link them.'); // @translate
+            }
         } catch (\Exception $e) {
-            $this->messenger()->addError('Import start failed'); // @translate
+            $this->messenger()->addError('Process start failed'); // @translate
         }
 
         return $this->redirect()->toRoute('admin/ead', ['action' => 'import']);

@@ -3,6 +3,7 @@ namespace Ead\Job;
 
 // Include a file from Omeka Classic plugin "Archive Folder".
 // TODO Remove or simplify these functions to manage paths.
+// TODO Finalize the adaptation of the process for Omeka S.
 require_once __DIR__ . '/ArchiveFolder/Tool/ManagePaths.php';
 
 use ArrayObject;
@@ -139,7 +140,7 @@ class ImportEad extends AbstractJob
         $this->xslParts = dirname(dirname(__DIR__)) . $this->xslParts;
         $this->xmlConfig = dirname(dirname(__DIR__)) . $this->xmlConfig;
 
-        $this->logger()->log(Logger::NOTICE, 'Import started'); // @translate
+        $this->logger()->log(Logger::NOTICE, 'Process started'); // @translate
 
         $file = $this->getArg('file');
         if (empty($file)) {
@@ -191,6 +192,7 @@ class ImportEad extends AbstractJob
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $this->processXslt = $pluginManager->get('processXslt');
         $this->bulk = $pluginManager->get('bulk');
+        $this->bulk->setAllowDuplicateIdentifiers(false);
         $this->managePaths = new ManagePaths($this->uri, $this->job->getArgs());
         $this->managePaths->setMetadataFilepath($this->metadataFilepath);
 
@@ -201,26 +203,48 @@ class ImportEad extends AbstractJob
             return;
         }
 
-        $this->logger()->info(
-            'Starting import of {number} converted resources.', // @translate
-            ['number' => count($this->resources)]
-        );
+        $action = $this->getArg('action');
+        switch ($action) {
+            default:
+                $this->logger()->notice('No action set: use "create".'); // @translate
+            case \BulkImport\Processor\AbstractProcessor::ACTION_CREATE:
+                $this->logger()->info(
+                    'Starting import of {number} converted resources.', // @translate
+                    ['number' => count($this->resources)]
+                );
+                $this->importDocuments();
+                $this->logger()->info(
+                    'Starting creation of links between archival components.' // @translate
+                );
+                $this->linkDocuments();
+                $this->logger()->info(
+                    'Import of {number} converted resources completed.', // @translate
+                    ['number' => count($this->resources)]
+                );
+                break;
 
-        $this->importDocuments();
+            case \BulkImport\Processor\AbstractProcessor::ACTION_DELETE:
+                $this->logger()->info(
+                    'The source contains {number} resources to be deleted.', // @translate
+                    ['number' => count($this->resources)]
+                );
+                $this->logger()->info('Starting deletion of matching resources.'); // @translate
+                $this->deleteDocuments();
+                $this->logger()->info(
+                    'Deletion of {number} resources completed.', // @translate
+                    ['number' => count($this->resources)]
+                );
+                break;
 
-        $this->logger()->log(
-            Logger::INFO,
-            'Starting creation of links between archival components.' // @translate
-        );
+            case \BulkImport\Processor\AbstractProcessor::ACTION_SKIP:
+                $this->logger()->info(
+                    'The source contains {number} resources that can be converted.', // @translate
+                    ['number' => count($this->resources)]
+                );
+                break;
+        }
 
-        $this->linkDocuments();
-
-        $this->logger()->info(
-            'Import of {number} converted resources completed.', // @translate
-            ['number' => count($this->resources)]
-        );
-
-        $this->logger()->log(Logger::NOTICE, 'Import completed'); // @translate
+        $this->logger()->log(Logger::NOTICE, 'Process completed'); // @translate
     }
 
     /**
@@ -343,8 +367,7 @@ class ImportEad extends AbstractJob
         // $this->removeDuplicateMetadata();
 
         if (empty($this->resources)) {
-            $this->logger()->log(
-                Logger::WARN,
+            $this->logger()->warn(
                 'No resources were created after conversion of the input file into Omeka items.' // @translate
             );
             return false;
@@ -357,7 +380,7 @@ class ImportEad extends AbstractJob
     }
 
     /**
-     * Import standard resources;
+     * Import standard resources.
      */
     protected function importDocuments()
     {
@@ -407,6 +430,76 @@ class ImportEad extends AbstractJob
                     ['index' => $this->indexResource]
                 );
             }
+        }
+    }
+
+    /**
+     * Import standard resources.
+     */
+    protected function deleteDocuments()
+    {
+        /** @var \Omeka\Mvc\Controller\Plugin\Api $api */
+        $api = $this->getServiceLocator()->get('ControllerPluginManager')->get('api');
+        $bulk = $this->bulk();
+
+        $this->indexSkipped = 0;
+        $this->indexDuplicated = 0;
+        foreach ($this->resources as &$resource) {
+            ++$this->indexResource;
+            ++$this->indexItem;
+
+            if (empty($resource['metadata']['dcterms:identifier'])) {
+                $this->logger()->warn(
+                    'Index #{index}: the metadata have no identifier.', // @translate
+                    ['index' => $this->indexResource]
+                );
+            }
+
+            $identifiers = array_map(function ($v) {
+                return empty($v['value_resource_id'])
+                    ? (empty($v['@id']) ? $v['@value'] : $v['@id'])
+                    : null;
+            }, $resource['metadata']['dcterms:identifier']);
+
+            // There are generally multiple identifiers, but the some original
+            // identifiers may not be unique, so they are checked one by one.
+            /*
+            $resourceIds = $bulk->findResourcesFromIdentifiers($identifiers, 'dcterms:identifier', 'items');
+            $resourceIds = array_unique($resourceIds);
+            if (count($resourceIds) > 1) {
+                $this->logger()->warn(
+                    'Index #{index}: the metadata matches duplicate resources, so they cannot be deleted.', // @translate
+                    ['index' => $this->indexResource]
+                );
+                continue;
+            }
+            $resourceId = reset($resourceIds);
+            */
+
+            // Generally, the unique identifier is the last one, that is added
+            // during process.
+            $identifiers = array_reverse($identifiers);
+            $resourceId = null;
+            foreach ($identifiers as $identifier) {
+                $resourceId = $bulk->findResourceFromIdentifier($identifier, 'dcterms:identifier', 'items');
+                if ($resourceId) {
+                    break;
+                }
+            }
+
+            if (!$resourceId) {
+                $this->logger()->warn(
+                    'Index #{index}: no resource or duplicate resources found, so it cannot be deleted.', // @translate
+                    ['index' => $this->indexResource]
+                );
+                break;
+            }
+
+            $api->delete('items', $resourceId);
+            $this->logger()->info(
+                'Index #{index}: Item #{item_id} deleted.', // @translate
+                ['index' => $this->indexResource, 'item_id' => $resourceId]
+            );
         }
     }
 
@@ -549,6 +642,7 @@ class ImportEad extends AbstractJob
                 $xpath = '/ead:ead/ead:eadheader/ead:eadid';
                 $result = $this->xml->xpath($xpath);
                 $result = json_decode(json_encode($result), true);
+pmf($result);
                 $result = $result[0]['@attributes'];
                 $result = array_intersect(array_keys($baseIds), $result);
                 if ($result) {
