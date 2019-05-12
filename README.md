@@ -1,8 +1,9 @@
 EAD (module for Omeka S)
 ========================
 
-[EAD] is a module for [Omeka S] that allows to import, update and delete EAD
-metadata inside Omeka and to display them.
+[EAD] is a module for [Omeka S] that allows to import, update and delete
+archival items and finding aids managed with the EAD standard inside Omeka and
+to display them.
 
 
 Installation

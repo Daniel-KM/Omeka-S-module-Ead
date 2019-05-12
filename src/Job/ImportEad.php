@@ -223,6 +223,22 @@ class ImportEad extends AbstractJob
                 );
                 break;
 
+            case \BulkImport\Processor\AbstractProcessor::ACTION_REPLACE:
+                $this->logger()->info(
+                    'Starting update of {number} converted resources.', // @translate
+                    ['number' => count($this->resources)]
+                );
+                $this->updateDocuments();
+                $this->logger()->info(
+                    'Starting creation of links between archival components.' // @translate
+                );
+                $this->linkDocuments();
+                $this->logger()->info(
+                    'Update of {number} converted resources completed.', // @translate
+                    ['number' => count($this->resources)]
+                );
+                break;
+
             case \BulkImport\Processor\AbstractProcessor::ACTION_DELETE:
                 $this->logger()->info(
                     'The source contains {number} resources to be deleted.', // @translate
@@ -380,22 +396,19 @@ class ImportEad extends AbstractJob
     }
 
     /**
-     * Import standard resources.
+     * Finalize documents.
      */
-    protected function importDocuments()
+    protected function completeDocuments()
     {
-        $api = $this->getServiceLocator()->get('ControllerPluginManager')->get('api');
+        $bulk = $this->bulk();
 
         foreach ($this->resources as &$resource) {
-            ++$this->indexResource;
-            ++$this->indexItem;
-
             $data = $resource['metadata'];
             if (!empty($resource['extra']['itemType'])
                 && isset($this->mapItemTypeToClasses[$resource['extra']['itemType']])
             ) {
                 $data['o:resource_class'] = [
-                    'o:id' => $this->bulk()
+                    'o:id' => $bulk
                         ->getResourceClassId($this->mapItemTypeToClasses[$resource['extra']['itemType']]),
                 ];
             }
@@ -406,7 +419,6 @@ class ImportEad extends AbstractJob
             $filesData = [];
             if (!empty($data['files'])) {
                 foreach ($data['files'] as $file) {
-                    ++$this->indexResource;
                     $fileData = $file['metadata'];
                     $fileData['o:resource_template'] = ['o:id' => null];
                     $fileData['o:resource_class'] = ['o:id' => null];
@@ -415,6 +427,29 @@ class ImportEad extends AbstractJob
                     $filesData[] = $fileData;
                 }
             }
+            $data['files'] = $filesData;
+            $resource['metadata'] = $data;
+
+        }
+    }
+
+    /**
+     * Import standard resources.
+     */
+    protected function importDocuments()
+    {
+        $api = $this->getServiceLocator()->get('ControllerPluginManager')->get('api');
+
+        $this->completeDocuments();
+
+        foreach ($this->resources as &$resource) {
+            ++$this->indexResource;
+            ++$this->indexItem;
+
+            $data = $resource['metadata'];
+            $filesData = $data['files'] ?: [];
+            unset($data['files']);
+            $this->indexResource += count($filesData);
 
             $item = $api->create('items', $data, $filesData)->getContent();
 
@@ -434,13 +469,80 @@ class ImportEad extends AbstractJob
     }
 
     /**
+     * Update standard resources.
+     */
+    protected function updateDocuments()
+    {
+        $api = $this->getServiceLocator()->get('ControllerPluginManager')->get('api');
+
+        $this->completeDocuments();
+
+        $actionUnidentified = $this->getArg('action_unidentified') === \BulkImport\Processor\AbstractProcessor::ACTION_CREATE
+            ? \BulkImport\Processor\AbstractProcessor::ACTION_CREATE
+            : \BulkImport\Processor\AbstractProcessor::ACTION_SKIP;
+
+        foreach ($this->resources as &$resource) {
+            ++$this->indexResource;
+            ++$this->indexItem;
+
+            $data = $resource['metadata'];
+            $filesData = $data['files'] ?: [];
+            unset($data['files']);
+            $this->indexResource += count($filesData);
+
+            $resourceId = $this->identifyResource($resource);
+            if (empty($resourceId)) {
+                if ($actionUnidentified === \BulkImport\Processor\AbstractProcessor::ACTION_SKIP) {
+                    $this->logger()->warn(
+                        'Index #{index}: no resource or duplicate resources found, so it is skipped.', // @translate
+                        ['index' => $this->indexResource]
+                    );
+                    ++$this->totalSkipped;
+                    continue;
+                }
+
+                $item = $api->create('items', $data, $filesData)->getContent();
+
+                if ($item) {
+                    $resource['process']['@id'] = $item->id();
+                    $this->logger()->info(
+                        'Index #{index}: Item #{item_id} created.', // @translate
+                        ['index' => $this->indexResource, 'item_id' => $item->id()]
+                    );
+                } else {
+                    $this->logger()->warn(
+                        'Index #{index}: Unable to create an item.', // @translate
+                        ['index' => $this->indexResource]
+                    );
+                }
+            }
+
+            // This is a full update (replacement, so not a partial).
+            else {
+                $item = $api->update('items', $resourceId, $data, $filesData)->getContent();
+                if ($item) {
+                    $resource['process']['@id'] = $item->id();
+                    $this->logger()->info(
+                        'Index #{index}: Item #{item_id} updated.', // @translate
+                        ['index' => $this->indexResource, 'item_id' => $item->id()]
+                    );
+                } else {
+                    $this->logger()->warn(
+                        'Index #{index}: Unable to update item #{item_id}.', // @translate
+                        ['index' => $this->indexResource, 'item_id' => $item->id()]
+                    );
+                }
+            }
+        }
+    }
+
+    /**
      * Import standard resources.
      */
     protected function deleteDocuments()
     {
         /** @var \Omeka\Mvc\Controller\Plugin\Api $api */
         $api = $this->getServiceLocator()->get('ControllerPluginManager')->get('api');
-        $bulk = $this->bulk();
 
         $this->indexSkipped = 0;
         $this->indexDuplicated = 0;
@@ -455,38 +557,7 @@ class ImportEad extends AbstractJob
                 );
             }
 
-            $identifiers = array_map(function ($v) {
-                return empty($v['value_resource_id'])
-                    ? (empty($v['@id']) ? $v['@value'] : $v['@id'])
-                    : null;
-            }, $resource['metadata']['dcterms:identifier']);
-
-            // There are generally multiple identifiers, but the some original
-            // identifiers may not be unique, so they are checked one by one.
-            /*
-            $resourceIds = $bulk->findResourcesFromIdentifiers($identifiers, 'dcterms:identifier', 'items');
-            $resourceIds = array_unique($resourceIds);
-            if (count($resourceIds) > 1) {
-                $this->logger()->warn(
-                    'Index #{index}: the metadata matches duplicate resources, so they cannot be deleted.', // @translate
-                    ['index' => $this->indexResource]
-                );
-                continue;
-            }
-            $resourceId = reset($resourceIds);
-            */
-
-            // Generally, the unique identifier is the last one, that is added
-            // during process.
-            $identifiers = array_reverse($identifiers);
-            $resourceId = null;
-            foreach ($identifiers as $identifier) {
-                $resourceId = $bulk->findResourceFromIdentifier($identifier, 'dcterms:identifier', 'items');
-                if ($resourceId) {
-                    break;
-                }
-            }
-
+            $resourceId = $this->identifyResource($resource);
             if (!$resourceId) {
                 $this->logger()->warn(
                     'Index #{index}: no resource or duplicate resources found, so it cannot be deleted.', // @translate
@@ -496,11 +567,55 @@ class ImportEad extends AbstractJob
             }
 
             $api->delete('items', $resourceId);
+
             $this->logger()->info(
                 'Index #{index}: Item #{item_id} deleted.', // @translate
                 ['index' => $this->indexResource, 'item_id' => $resourceId]
             );
         }
+    }
+
+    /**
+     * Identify the resource id from metadata.
+     *
+     * @param array $resource
+     * @param string $resourceType
+     * @return int|null
+     */
+    protected function identifyResource(array $resource, $resourceType = 'items')
+    {
+        $identifiers = array_map(function ($v) {
+            return empty($v['value_resource_id'])
+                ? (empty($v['@id']) ? $v['@value'] : $v['@id'])
+                : null;
+        }, $resource['metadata']['dcterms:identifier']);
+
+        // There are generally multiple identifiers, but the some original
+        // identifiers may not be unique, so they are checked one by one.
+        /*
+         $resourceIds = $bulk->findResourcesFromIdentifiers($identifiers, 'dcterms:identifier', 'items');
+         $resourceIds = array_unique($resourceIds);
+         if (count($resourceIds) > 1) {
+         $this->logger()->warn(
+         'Index #{index}: the metadata matches duplicate resources, so they cannot be deleted.', // @translate
+         ['index' => $this->indexResource]
+         );
+         continue;
+         }
+         $resourceId = reset($resourceIds);
+         */
+
+        // Generally, the unique identifier is the last one, that is added
+        // during process.
+        $identifiers = array_reverse($identifiers);
+        $resourceId = null;
+        foreach ($identifiers as $identifier) {
+            $resourceId = $this->bulk->findResourceFromIdentifier($identifier, 'dcterms:identifier', $resourceType);
+            if ($resourceId) {
+                break;
+            }
+        }
+        return $resourceId;
     }
 
     /**

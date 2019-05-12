@@ -180,6 +180,7 @@ class EadController extends AbstractActionController
             switch ($action) {
                 default:
                 case \BulkImport\Processor\AbstractProcessor::ACTION_CREATE:
+                case \BulkImport\Processor\AbstractProcessor::ACTION_REPLACE:
                     $this->messenger()->addNotice('The process is done in two steps: extraction of all pieces as items, then creation of the tree structure to link them.'); // @translate
                     break;
                 case \BulkImport\Processor\AbstractProcessor::ACTION_DELETE:

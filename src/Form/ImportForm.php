@@ -20,6 +20,7 @@ class ImportForm extends Form
                 'info' => 'The update and deletion of resources uses their original identifiers, so they should not be changed.', // @translate
                 'value_options' => [
                     \BulkImport\Processor\AbstractProcessor::ACTION_CREATE => 'Create new resources', // @translate
+                    \BulkImport\Processor\AbstractProcessor::ACTION_REPLACE => 'Replace all data of resources', // @translate
                     \BulkImport\Processor\AbstractProcessor::ACTION_DELETE => 'Delete resources', // @translate
                     \BulkImport\Processor\AbstractProcessor::ACTION_SKIP => 'Skip entries (dry run)', // @translate
                 ],
@@ -29,6 +30,23 @@ class ImportForm extends Form
                 'multiple' => false,
                 'required' => true,
                 'class' => 'chosen-select',
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'action_unidentified',
+            'type' => Element\Radio::class,
+            'options' => [
+                'label' => 'Action on unidentified resources', // @translate
+                'info' => 'What to do when a resource to update does not exist.', // @translate
+                'value_options' => [
+                    \BulkImport\Processor\AbstractProcessor::ACTION_SKIP => 'Skip entry', // @translate
+                    \BulkImport\Processor\AbstractProcessor::ACTION_CREATE => 'Create a new resource', // @translate
+                ],
+            ],
+            'attributes' => [
+                'id' => 'action_unidentified',
+                'value' => \BulkImport\Processor\AbstractProcessor::ACTION_SKIP,
             ],
         ]);
 
