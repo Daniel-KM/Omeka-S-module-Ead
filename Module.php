@@ -52,8 +52,12 @@ class Module extends AbstractModule
         $lib = __DIR__ . '/data/xsl/Ead2DCterms/ead2dcterms.xsl';
         if (!file_exists($lib)) {
             throw new \Omeka\Module\Exception\ModuleCannotInstallException(
-                sprintf('EAD2DCTerms library should be installed. See %sReadme%s.',
-                '<a href="https://github.com/Daniel-KM/Omeka-S-module-BulkImportEad#install">', '</a>'));
+                sprintf(
+                    'EAD2DCTerms library should be installed. See %sReadme%s.',
+                    '<a href="https://github.com/Daniel-KM/Omeka-S-module-BulkImportEad#install">',
+                    '</a>'
+                )
+            );
         }
 
         parent::install($serviceLocator);

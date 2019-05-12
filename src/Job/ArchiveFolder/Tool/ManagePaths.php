@@ -206,8 +206,7 @@ class ArchiveFolder_Tool_ManagePaths
                     && realpath($absolutePath) != $absolutePath
                 ) {
                 $absolutePath = null;
-            }
-            elseif (!$this->isInsideFolder($absolutePath)) {
+            } elseif (!$this->isInsideFolder($absolutePath)) {
                 $absolutePath = null;
             }
         }
@@ -315,13 +314,13 @@ class ArchiveFolder_Tool_ManagePaths
      * @param string $relativePath Relative path.
      * @return string
      */
-   public function rawurlencodeRelativePath($relativePath)
-   {
+    public function rawurlencodeRelativePath($relativePath)
+    {
         $paths = explode('/', $relativePath);
         $paths = array_map('rawurlencode', $paths);
         $path = implode('/', $paths);
         return $path;
-   }
+    }
 
     /**
      * Determine if a uri is a remote url or a local path.
