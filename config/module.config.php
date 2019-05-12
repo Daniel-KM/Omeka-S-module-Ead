@@ -17,6 +17,11 @@ return [
             Controller\Admin\BulkImportEadController::class => Service\Controller\Admin\BulkImportEadControllerFactory::class,
         ],
     ],
+    'controller_plugins' => [
+        'factories' => [
+            'ead' => Service\ControllerPlugin\EadFactory::class,
+        ],
+    ],
     'router' => [
         'routes' => [
             'admin' => [
