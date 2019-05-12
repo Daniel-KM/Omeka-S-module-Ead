@@ -220,7 +220,7 @@ class Ead extends AbstractHelper
     }
 
     /**
-     * Get the hierarchy branch of this item.
+     * Get the hierarchy branch of this item, self included.
      *
      * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::branch()
      * @return array

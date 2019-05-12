@@ -5,14 +5,13 @@
  * @var array $options
  */
 
-$translate = $this->plugin('translate');
 ?>
 <ul>
-<?php foreach ($data['narrowers'] as $children): ?>
-    <li><?= $children['current']->linkPretty() ?>
-    <?php if (!empty($children['narrowers'])): ?>
-        <?= $this->partial('common/ead-tree-recursive', ['data' => $children['narrowers'], 'options' => $options]) ?>
-   <?php endif; ?>
+    <?php foreach ($data as $current): ?>
+    <li><?= $current['self']->linkPretty() ?>
+        <?php if (!empty($current['children'])): ?>
+        <?= $this->partial('common/ead-tree-recursive', ['data' => $current['children'], 'options' => $options]) ?>
+        <?php endif; ?>
    </li>
-<?php endforeach; ?>
+   <?php endforeach; ?>
 </ul>

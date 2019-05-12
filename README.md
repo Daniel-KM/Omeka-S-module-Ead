@@ -40,6 +40,10 @@ TODO
 ----
 
 * Manage the xml with a doctype (via full domxml, not simplexml).
+* Optimize structure building via direct queries to the database. See Omeka
+  plugin Ead.
+* Replace textual properties by a single property saved as literal xml with
+  module RdfDatatype.
 
 
 Warning

@@ -6,6 +6,9 @@ use Omeka\Api\Representation\ItemRepresentation;
 use Omeka\Mvc\Controller\Plugin\Api;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
+/**
+ * @todo Optimize structure building via direct queries to the database. See Omeka plugin Ead.
+ */
 class Ead extends AbstractPlugin
 {
     const ROOT_CLASS = 'ead:ArchivalFindingAid';
@@ -318,21 +321,26 @@ class Ead extends AbstractPlugin
         $item = $this->ArchivalFindingAid();
         if ($item) {
             $result[] = [
-                'current' => $item,
-                'narrowers' => $this->recursiveBranch($item),
+                'self' => $item,
+                'children' => $this->recursiveBranch($item),
             ];
         }
         return $result;
     }
 
     /**
-     * Get the hierarchy branch of this item.
+     * Get the hierarchy branch of this item, self included.
      *
      * @return array
      */
     public function branch()
     {
-        return $this->recursiveBranch($this->item);
+        $result = [];
+        $result[] = [
+            'self' => $this->item,
+            'children' => $this->recursiveBranch($item),
+        ];
+        return $result;
     }
 
     /**
@@ -508,8 +516,8 @@ class Ead extends AbstractPlugin
             $id = $child->id();
             if (!isset($branch[$id])) {
                 $branch[$id] = [
-                    'current' => $child,
-                    'narrowers' => $this->recursiveBranch($child),
+                    'self' => $child,
+                    'children' => $this->recursiveBranch($child),
                 ];
             }
         }
