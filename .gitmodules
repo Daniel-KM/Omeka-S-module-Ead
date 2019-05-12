@@ -1,0 +1,3 @@
+[submodule "data/xsl/Ead2DCterms"]
+	path = data/xsl/Ead2DCterms
+	url = https://github.com/Daniel-KM/Ead2DCterms
