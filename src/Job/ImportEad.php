@@ -141,7 +141,7 @@ class ImportEad extends AbstractJob
 
         $this->logger()->log(Logger::NOTICE, 'Import started'); // @translate
 
-        $file = $this->getArg('files')['file'];
+        $file = $this->getArg('file');
         if (empty($file)) {
             $this->logger()->log(Logger::ERR, 'No file submitted.'); // @translate
             return;
@@ -159,7 +159,8 @@ class ImportEad extends AbstractJob
         }
 
         // Use the base name as document uri.
-        $this->uri = $file['name'];
+        $isRemote = $this->getArg('isRemote');
+        $this->uri = $isRemote ? $this->getArg('url') : $file['name'];
 
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $this->processXslt = $pluginManager->get('processXslt');
@@ -186,6 +187,11 @@ class ImportEad extends AbstractJob
         );
 
         $this->linkDocuments();
+
+        $this->logger()->info(
+            'Import of {number} converted resources completed.', // @translate
+            ['number' => count($this->resources)]
+        );
 
         $this->logger()->log(Logger::NOTICE, 'Import completed'); // @translate
     }

@@ -21,7 +21,20 @@ class ImportForm extends Form
             ],
             'attributes' => [
                 'id' => 'file',
-                'required' => true,
+                'required' => false,
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'url',
+            'type' => Element\Url::class,
+            'options' => [
+                'label' => 'EAD xml url', // @translate
+                'info'  => 'The EAD may be available via a end point.', //@translate
+            ],
+            'attributes' => [
+                'id' => 'url',
+                'required' => false,
             ],
         ]);
 
@@ -68,6 +81,10 @@ The base id should be linked to one of the attributes of the \"eadid\" element: 
         ]);
 
         $inputFilter = $this->getInputFilter();
+        $inputFilter->add([
+            'name' => 'url',
+            'required' => false,
+        ]);
         $inputFilter->add([
             'name' => 'ead_base_id',
             'required' => false,
