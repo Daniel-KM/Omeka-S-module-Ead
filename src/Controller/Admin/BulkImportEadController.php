@@ -97,7 +97,9 @@ class BulkImportEadController extends AbstractActionController
             );
         } else {
             $args = $form->getData();
-            $args['filepath'] = $this->moveToTemp($files['file']['tmp_name']);
+            unset($args['csrf']);
+            $args['files'] = $files;
+            $args['files']['file']['tmp_name'] = $this->moveToTemp($files['file']['tmp_name']);
 
             $dispatcher = $this->jobDispatcher();
             try {
