@@ -1,0 +1,21 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ * @var \BulkImportEad\Form\ImportForm $form
+ */
+
+$translate = $this->plugin('translate');
+$form->prepare();
+?>
+
+<?php echo $this->pageTitle($translate('Import EAD')); ?>
+<h3><?php echo $translate('Import'); ?></h3>
+<?php echo $this->form()->openTag($form); ?>
+<fieldset id='page-actions'>
+    <input type='submit' value="<?=  $translate('Next') ?>" aria-label="<?= $translate('Next') ?>"/>
+</fieldset>
+<p class="explanation">
+    <?php echo $translate('Import an EAD repository as Omeka items.'); ?>
+</p>
+<?php echo $this->formCollection($form, false); ?>
+<?php echo $this->form()->closeTag($form); ?>

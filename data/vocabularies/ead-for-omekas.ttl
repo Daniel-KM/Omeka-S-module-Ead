@@ -1,0 +1,135 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ead: <http://www.loc.gov/ead> .
+
+<http://www.loc.gov/ead> a owl:Ontology ;
+    dcterms:title "Encoded Archival Description (extract for Omeka S)"@en ;
+    dcterms:description "An adaptation of the Encoded Archival Description (EAD) as a vocabulary. Only elements that can’t be easily mapped into Dublin Core Terms, mainly textual content, are added."@en .
+
+ead:ArchivalFindingAid a owl:Class ;
+    rdfs:label "Archival finding aid"@en ;
+    rdfs:comment "A catalog of documents or an inventory of pieces of archive that summarizes their content and organization to facilitate their access."@en .
+
+ead:dsc a rdf:Property ;
+    rdfs:label "Description of Subordinate Components"@en ;
+    rdfs:comment "Description of subordinate components"@en .
+
+ead:unitDidHead a rdf:Property ;
+    rdfs:label "Descriptive Identification : Heading"@en ;
+    rdfs:comment "Title or caption for a section of text, including a list, inside the descriptive identification of an archival description or a component."@en .
+
+ead:unitDidNote a rdf:Property ;
+    rdfs:label "Descriptive Identification : Note"@en ;
+    rdfs:comment "Note inside the descriptive identification of an archival description or a component."@en .
+
+ead:unitAppraisal a rdf:Property ;
+    rdfs:label "Appraisal Information"@en ;
+    rdfs:comment "Information about the process of determining the archival value and thus the disposition of records."@en .
+
+ead:unitArrangement a rdf:Property ;
+    rdfs:label "Arrangement"@en ;
+    rdfs:comment "Information on how the described materials have been subdivided into smaller units."@en .
+
+ead:unitBioghist a rdf:Property ;
+    rdfs:label "Biography or History"@en ;
+    rdfs:comment "A concise essay or chronology that places the archival materials in context by providing information about their creator(s)."@en .
+
+ead:unitIndex a rdf:Property ;
+    rdfs:label "Index"@en ;
+    rdfs:comment "A list of key terms and reference pointers that have been assembled to enhance access to the materials being described."@en .
+
+ead:unitLevel a rdf:Property ;
+    rdfs:label "Level"@en ;
+    rdfs:comment "The hierarchical level of the materials being described by the element (may be other level too)."@en .
+
+ead:unitNote a rdf:Property ;
+    rdfs:label "Note"@en ;
+    rdfs:comment "Note inside a the archival description or a component."@en .
+
+ead:unitOdd a rdf:Property ;
+    rdfs:label "Other Descriptive Data"@en ;
+    rdfs:comment "An element for information about the described materials that is not easily incorporated into one of the other named elements within archival description and components."@en .
+
+ead:unitProcessinfo a rdf:Property ;
+    rdfs:label "Processing Information"@en ;
+    rdfs:comment "Information about accessioning, arranging, describing, preserving, storing, or otherwise preparing the described materials for research use."@en .
+
+ead:unitScopecontent a rdf:Property ;
+    rdfs:label "Scope and Content"@en ;
+    rdfs:comment "A prose statement summarizing the range and topical coverage of the described materials."@en .
+
+ead:unitHead a rdf:Property ;
+    rdfs:label "Heading"@en ;
+    rdfs:comment "Title or caption for a section of text, including a list, inside an archival description or a component."@en .
+
+ead:unitThead a rdf:Property ;
+    rdfs:label "Table Head"@en ;
+    rdfs:comment "Provides column headings for components or the description of subordinate components."@en .
+
+
+ead:eadheaderEditionstmt a rdf:Property ;
+    rdfs:label "Edition Statement"@en ;
+    rdfs:comment "Groups information about a finding aid edition by providing an Edition element as well as a Paragraph element for narrative statements."@en .
+
+ead:eadheaderPublicationstmt a rdf:Property ;
+    rdfs:label "Publication Statement"@en ;
+    rdfs:comment "Publication or distribution of the encoded finding aid, including the publisher's name and address, the date of publication, and other relevant details."@en .
+
+ead:eadheaderNotestmt a rdf:Property ;
+    rdfs:label "Note statement"@en ;
+    rdfs:comment 'Piece of descriptive information about the finding aid, similar to the "general notes" in traditional bibliographic descriptions.'@en .
+
+ead:eadheaderProfiledescCreation a rdf:Property ;
+    rdfs:label "Profile description : Creation"@en ;
+    rdfs:comment "Information about the encoding of the finding aid, including the person(s) or agency(ies) responsible for the encoding, the date, and the circumstances under which the encoding was done."@en .
+
+ead:eadheaderProfiledescDescrules a rdf:Property ;
+    rdfs:label "Profile description : Descriptive Rules"@en ;
+    rdfs:comment "Enumeration of the rules, standards, conventions, and protocols used in preparing the description."@en .
+
+ead:eadheaderProfiledescLangusage a rdf:Property ;
+    rdfs:label "Profile description : Language Usage"@en ;
+    rdfs:comment "Languages, sublanguages, and dialects represented in an encoded finding aid."@en .
+
+ead:eadheaderRevisiondescChange a rdf:Property ;
+    rdfs:label "Revision Description : Change"@en ;
+    rdfs:comment "Brief description of an update made to an EAD document."@en .
+
+ead:eadheaderRevisiondesc-list a rdf:Property ;
+    rdfs:label "Revision Description : List"@en ;
+    rdfs:comment "Series of words or numerals informations used to describe revisions."@en .
+
+ead:frontmatterTitlepage a rdf:Property ;
+    rdfs:label "Front matter : Title page"@en ;
+    rdfs:comment "Prefatory text that focuses on the creation, publication, or use of the finding aid rather than information about the materials being described."@en .
+
+ead:frontmatterTitlepageBlockquote a rdf:Property ;
+    rdfs:label "Front matter : Title page : Block Quote"@en ;
+    rdfs:comment "An extended quotation inside the title page of the front matter."@en .
+
+ead:frontmatterTitlepageChronlist a rdf:Property ;
+    rdfs:label "Front matter : Title page : Chronology list"@en ;
+    rdfs:comment "Chronology list inside the title page of the front matter."@en .
+
+ead:frontmatterTitlepageList a rdf:Property ;
+    rdfs:label "Front matter : Title page : List"@en ;
+    rdfs:comment "List inside the title page of the front matter."@en .
+
+ead:frontmatterTitlepageNote a rdf:Property ;
+    rdfs:label "Front matter : Title page : Note"@en ;
+    rdfs:comment "Note inside the title page of the front matter."@en .
+
+ead:frontmatterTitlepageP a rdf:Property ;
+    rdfs:label "Front matter : Title page : Paragraph"@en ;
+    rdfs:comment "Paragraph inside the title page of the front matter."@en .
+
+ead:frontmatterTitlepageTable a rdf:Property ;
+    rdfs:label "Front matter : Title page : Table"@en ;
+    rdfs:comment "Table inside the title page of the front matter."@en .
+
+ead:frontmatterDiv a rdf:Property ;
+    rdfs:label "Front matter : Division"@en ;
+    rdfs:comment "A division inside the front matter to group similar informations."@en .
+
