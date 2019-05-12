@@ -141,18 +141,25 @@ class ImportEad extends AbstractJob
 
         $this->logger()->log(Logger::NOTICE, 'Import started'); // @translate
 
-        $this->uri = $this->getArg('files')['file']['tmp_name'];
-        if (empty($this->uri)) {
+        $file = $this->getArg('files')['file'];
+        if (empty($file)) {
+            $this->logger()->log(Logger::ERR, 'No file submitted.'); // @translate
+            return;
+        }
+
+        $this->metadataFilepath = $file['tmp_name'];
+        if (empty($this->metadataFilepath)) {
             $this->logger()->log(Logger::ERR, 'Unable to cache file.'); // @translate
             return;
         }
 
-        if (!filesize($this->uri)) {
+        if (!filesize($this->metadataFilepath)) {
             $this->logger()->log(Logger::ERR, 'File is empty.'); // @translate
             return;
         }
 
-        $this->metadataFilepath = $this->uri;
+        // Use the base name as document uri.
+        $this->uri = $file['name'];
 
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $this->processXslt = $pluginManager->get('processXslt');
@@ -464,36 +471,42 @@ class ImportEad extends AbstractJob
     {
         $baseIdXml = [];
 
+        $file = $this->getArg('file');
+        $isUploaded = !$this->bulk()->isUrl($file['name']);
+        $defaultBaseId = $isUploaded
+            ? $file['name']
+            : $this->uri;
+
         $baseId = $this->getArg('ead_base_id');
         switch ($baseId) {
             case 'documentUri':
             default:
                 $baseIdXml['from'] = '';
-                $baseIdXml['default'] = $this->metadataFilepath;
+                $baseIdXml['default'] = $defaultBaseId;
                 break;
             case 'basename':
                 $baseIdXml['from'] = '';
-                $baseIdXml['default'] = pathinfo($this->metadataFilepath, PATHINFO_BASENAME);
+                $baseIdXml['default'] = pathinfo($defaultBaseId, PATHINFO_BASENAME);
                 break;
             case 'filename':
                 $baseIdXml['from'] = '';
-                $baseIdXml['default'] = pathinfo($this->metadataFilepath, PATHINFO_FILENAME);
+                $baseIdXml['default'] = pathinfo($defaultBaseId, PATHINFO_FILENAME);
                 break;
             case 'eadid':
                 $baseIdXml['from'] = '/ead/eadheader/eadid';
-                $baseIdXml['default'] = $this->metadataFilepath;
+                $baseIdXml['default'] = $defaultBaseId;
                 break;
             case 'publicid':
                 $baseIdXml['from'] = '/ead/eadheader/eadid/@publicid';
-                $baseIdXml['default'] = $this->metadataFilepath;
+                $baseIdXml['default'] = $defaultBaseId;
                 break;
             case 'identifier':
                 $baseIdXml['from'] = '/ead/eadheader/eadid/@identifier';
-                $baseIdXml['default'] = $this->metadataFilepath;
+                $baseIdXml['default'] = $defaultBaseId;
                 break;
             case 'url':
                 $baseIdXml['from'] = '/ead/eadheader/eadid/@url';
-                $baseIdXml['default'] = $this->metadataFilepath;
+                $baseIdXml['default'] = $defaultBaseId;
                 break;
             case 'custom':
                 $baseIdXml['from'] = '';
@@ -510,11 +523,12 @@ class ImportEad extends AbstractJob
                 }
                 // Unknown identifier.
                 else {
-                    $baseIdXml['default'] = $this->metadataFilepath;
+                    $baseIdXml['default'] = $defaultBaseId;
                 }
                 break;
         }
-        $baseIdXml = array_map('xml_escape', $baseIdXml);
+
+        $baseIdXml = array_map([$this->bulk, 'xml_escape'], $baseIdXml);
         return $baseIdXml;
     }
 

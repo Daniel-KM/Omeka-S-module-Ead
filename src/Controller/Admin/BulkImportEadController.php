@@ -70,6 +70,14 @@ class BulkImportEadController extends AbstractActionController
             return $this->redirect()->toRoute('admin/bulk-import-ead');
         }
 
+        $args = $form->getData();
+        if ($args['ead_base_id'] === 'custom' && empty($args['ead_base_ids'])) {
+            $this->messenger()->addError(
+                'With custom base id, you should fill the params.' // @translate
+            );
+            return $this->redirect()->toRoute('admin/bulk-import-ead');
+        }
+
         // TODO Check the file during validation inside the form.
 
         $file = $files['file'];
@@ -96,7 +104,6 @@ class BulkImportEadController extends AbstractActionController
                 sprintf('The xml doesn’t have the required namespace.') // @translate
             );
         } else {
-            $args = $form->getData();
             unset($args['csrf']);
             $args['files'] = $files;
             $args['files']['file']['tmp_name'] = $this->moveToTemp($files['file']['tmp_name']);
