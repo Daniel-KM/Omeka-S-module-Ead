@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Map specific elements used in the mapping of EAD with the names used in Omeka.
+
+This version uses xslt version 2.0.
+
+@version: 20150817
+@copyright Daniel Berthereau, 2015
+@license CeCILL v2.1 http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
+@link https://github.com/Daniel-KM/Omeka-plugin-Ead
+-->
+<mapping>
+    <elementSet name="Item Type Metadata">
+        <map to="omeka:eadheader-editionstmt" label="Edition Statement" />
+        <map to="omeka:eadheader-publicationstmt" label="Publication Statement" />
+        <map to="omeka:eadheader-notestmt" label="Note statement" />
+        <map to="omeka:eadheader-profiledesc-creation" label="Profile description : Creation" />
+        <map to="omeka:eadheader-profiledesc-descrules" label="Profile description : Descriptive Rules" />
+        <map to="omeka:eadheader-profiledesc-langusage" label="Profile description : Language Usage" />
+        <map to="omeka:eadheader-revisiondesc-change" label="Revision Description : Change" />
+        <map to="omeka:eadheader-revisiondesc-list" label="Revision Description : List" />
+
+        <map to="omeka:frontmatter-titlepage" label="Front matter : Title page" />
+        <!-- These sub-elements of the title page are not used currently by the
+        plugin Ead for Omeka. -->
+        <map to="omeka:frontmatter-titlepage-blockquote" label="Front matter : Title page : Block Quote" />
+        <map to="omeka:frontmatter-titlepage-chronlist" label="Front matter : Title page : Chronology list" />
+        <map to="omeka:frontmatter-titlepage-list" label="Front matter : Title page : List" />
+        <map to="omeka:frontmatter-titlepage-note" label="Front matter : Title page : Note" />
+        <map to="omeka:frontmatter-titlepage-p" label="Front matter : Title page : Paragraph" />
+        <map to="omeka:frontmatter-titlepage-table" label="Front matter : Title page : Table" />
+
+        <map to="omeka:frontmatter-div" label="Front matter : Division" />
+    </elementSet>
+
+    <elementSet name="EAD Archive">
+        <!-- Element "dsc" is not used currently by the plugin Ead for Omeka. -->
+        <map to="omeka:archdesc-dsc" label="Archival Description : Description of Subordinate Components" />
+        <map to="omeka:dsc" label="Description of Subordinate Components" />
+
+        <map to="omeka:unit-did-head" label="Descriptive Identification : Heading" />
+        <map to="omeka:unit-did-note" label="Descriptive Identification : Note" />
+
+        <map to="omeka:unit-appraisal" label="Appraisal Information" />
+        <map to="omeka:unit-arrangement" label="Arrangement" />
+        <map to="omeka:unit-bioghist" label="Biography or History" />
+        <map to="omeka:unit-index" label="Index" />
+        <map to="omeka:unit-level" label="Level" />
+        <map to="omeka:unit-note" label="Note" />
+        <map to="omeka:unit-odd" label="Other Descriptive Data" />
+        <map to="omeka:unit-processinfo" label="Processing Information" />
+        <map to="omeka:unit-scopecontent" label="Scope and Content" />
+        <map to="omeka:unit-head" label="Heading" />
+        <map to="omeka:unit-thead" label="Table Head" />
+    </elementSet>
+
+    <elementSet name="extra">
+        <!-- This element is not used currently, except for processing. -->
+        <map to="omeka:xpath" label="XPath" />
+    </elementSet>
+</mapping>
+
