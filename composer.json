@@ -1,6 +1,6 @@
 {
     "name": "daniel-km/omeka-s-module-ead",
-    "description": "Bulk import EAD (module for Omeka S)",
+    "description": "EAD (module for Omeka S)",
     "type": "library",
     "license": "CECILL-2.1",
     "authors": [

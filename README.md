@@ -1,8 +1,8 @@
-Bulk import EAD (module for Omeka S)
-====================================
+EAD (module for Omeka S)
+========================
 
-[Bulk import EAD] is a module for [Omeka S] that allows to import EAD inside
-Omeka and to display them.
+[EAD] is a module for [Omeka S] that allows to import EAD inside Omeka and to
+display them.
 
 
 Installation
@@ -10,10 +10,26 @@ Installation
 
 First, install the modules [Generic] and [Bulk Import].
 
-Uncompress files and rename module folder `Ead`. Then install it like any
-other Omeka module and follow the config instructions.
+The module uses an external library, [`Ead2SDCterms`], so use the release zip to
+install it, or use and init the source.
 
-See general end user documentation for [Installing a module].
+See general end user documentation for [installing a module].
+
+* From the zip
+
+Download the last release [`Ead.zip`] from the list of releases (the master does
+not contain the dependency), and uncompress it in the `modules` directory.
+
+* From the source and for development
+
+If the module was installed from the source, rename the folder of the module to
+`Ead`, go to the root of the module, and run:
+
+```
+    composer install
+```
+
+Composer will install the tool `Ead2DCterms` in `data/xsl`.
 
 A xslt 2 processor may need to be installed too. See install help of [Bulk Import].
 
@@ -91,11 +107,13 @@ Copyright
 
 
 [Omeka S]: https://omeka.org/s
-[Bulk import EAD]: https://github.com/Daniel-KM/Omeka-S-module-BulkImportEAD
+[EAD]: https://github.com/Daniel-KM/Omeka-S-module-EAD
 [Bulk Import]: https://github.com/Daniel-KM/Omeka-S-module-BulkImport
 [Generic]: https://github.com/Daniel-KM/Omeka-S-module-Generic
 [Installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
-[module issues]: https://github.com/Daniel-KM/Omeka-S-module-BulkImportEAD/issues
+[module issues]: https://github.com/Daniel-KM/Omeka-S-module-EAD/issues
+[`Ead2SDCterms`]: https://github.com/Daniel-KM/Ead2DCterms
+[`data/xsl`]: https://github.com/Daniel-KM/Omeka-S-module-Ead/tree/master/data/xsl
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
