@@ -122,6 +122,16 @@ class ImportEad extends AbstractJob
      */
     protected $xml;
 
+    /**
+     * @var int
+     */
+    protected $indexResource = 0;
+
+    /**
+     * @var int
+     */
+    protected $indexItem = 0;
+
     public function perform()
     {
         $this->xslMain = dirname(dirname(__DIR__)) . $this->xslMain;
@@ -271,7 +281,51 @@ class ImportEad extends AbstractJob
      */
     protected function importDocuments()
     {
+        $api = $this->getServiceLocator()->get('ControllerPluginManager')->get('api');
+
         foreach ($this->resources as $resource) {
+            ++$this->indexResource;
+            ++$this->indexItem;
+
+            $data = $resource['metadata'];
+            if (!empty($resource['extra']['itemType'])
+                && isset($this->mapItemTypeToClasses[$resource['extra']['itemType']])
+            ) {
+                $data['o:resource_class'] = [
+                    'o:id' => $this->bulk()
+                        ->getResourceClassId($this->mapItemTypeToClasses[$resource['extra']['itemType']]),
+                ];
+            }
+            $data['o:resource_template'] = ['o:id' => null];
+            $data['o:thumbnail'] = ['o:id' => null];
+            $data['o:is_public'] = true;
+
+            $filesData = [];
+            if (!empty($data['files'])) {
+                foreach ($data['files'] as $file) {
+                    ++$this->indexResource;
+                    $fileData = $file['metadata'];
+                    $fileData['o:resource_template'] = ['o:id' => null];
+                    $fileData['o:resource_class'] = ['o:id' => null];
+                    $fileData['o:thumbnail'] = ['o:id' => null];
+                    $fileData['o:is_public'] = true;
+                    $filesData[] = $fileData;
+                }
+            }
+
+            $item = $api->create('items', $data, $filesData)->getContent();
+
+            if ($item) {
+                $this->logger()->info(
+                    'Index #{index}: Item #{item_id} created.', // @translate
+                    ['index' => $this->indexResource, 'item_id' => $item->id()]
+                );
+            } else {
+                $this->logger()->warn(
+                    'Index #{index}: Unable to create an item.', // @translate
+                    ['index' => $this->indexResource]
+                );
+            }
         }
     }
 
