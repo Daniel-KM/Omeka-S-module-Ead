@@ -1,0 +1,418 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-13 00:00+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: view/common/ead-list.phtml:18
+msgid "Sub-components"
+msgstr ""
+
+#: view/common/ead-list.phtml:19
+msgid "Related components"
+msgstr ""
+
+#: view/common/ead-list.phtml:20
+msgid "Sibling components"
+msgstr ""
+
+#: view/common/ead-list.phtml:21
+msgid "Ascendant components"
+msgstr ""
+
+#: view/common/ead-list.phtml:22
+msgid "Descendant components"
+msgstr ""
+
+#: view/common/ead-list.phtml:23
+msgid "Linked components"
+msgstr ""
+
+#: view/common/ead-list.phtml:35 view/common/ead-tree.phtml:32
+msgid "No component."
+msgstr ""
+
+#: view/common/ead-single.phtml:18 view/common/ead-single.phtml:19
+msgid "Archival finding aid"
+msgstr ""
+
+#: view/common/ead-single.phtml:20
+msgid "Archival description"
+msgstr ""
+
+#: view/common/ead-single.phtml:21
+msgid "Upper component"
+msgstr ""
+
+#: view/common/ead-single.phtml:22
+msgid "Specific component"
+msgstr ""
+
+#: view/common/ead-single.phtml:34
+msgid "No content."
+msgstr ""
+
+#: view/common/ead-tree.phtml:18 view/common/ead-tree.phtml:20
+msgid "Tree"
+msgstr ""
+
+#: view/common/ead-tree.phtml:19
+msgid "Branch"
+msgstr ""
+
+#: view/ead/admin/ead/import.phtml:11
+msgid "Import EAD"
+msgstr ""
+
+#: view/ead/admin/ead/import.phtml:18
+msgid "Import an EAD repository as Omeka items."
+msgstr ""
+
+#: view/ead/admin/ead/import.phtml:19
+msgid "Upload a xml file or set the url of the EAD end point."
+msgstr ""
+
+#: Module.php:96
+msgid "EAD for Omeka"
+msgstr ""
+
+#: Module.php:97
+msgid ""
+"An adaptation of the Encoded Archival Description (EAD) as a vocabulary. "
+"Only elements that can’t be easily mapped into Dublin Core Terms, mainly "
+"textual content, are added. Textual content will be imported as xhtml in a "
+"future version."
+msgstr ""
+
+#: src/Form/ImportForm.php:19
+msgid "EAD xml file"
+msgstr ""
+
+#: src/Form/ImportForm.php:20
+msgid "The EAD is a simple xml file."
+msgstr ""
+
+#: src/Form/ImportForm.php:32
+msgid "EAD xml url"
+msgstr ""
+
+#: src/Form/ImportForm.php:33
+msgid "The EAD may be available via a end point."
+msgstr ""
+
+#: src/Form/ImportForm.php:45
+msgid "Base ids"
+msgstr ""
+
+#: src/Form/ImportForm.php:46
+msgid ""
+"Each item inside an EAD xml file is represented by a unique id, that is used "
+"to make relations between all items.\n"
+"\n"
+"The base id is the first part of this id.\n"
+"\n"
+"Default is the full document uri for remote source and filename for uploaded "
+"file."
+msgstr ""
+
+#: src/Form/ImportForm.php:50
+msgid "Document uri"
+msgstr ""
+
+#: src/Form/ImportForm.php:51
+msgid "Filename"
+msgstr ""
+
+#: src/Form/ImportForm.php:52
+msgid "Filename without extension"
+msgstr ""
+
+#: src/Form/ImportForm.php:53
+msgid "Value of element \"eadid\""
+msgstr ""
+
+#: src/Form/ImportForm.php:54
+msgid "Attribute \"publicid\" of \"eadid\""
+msgstr ""
+
+#: src/Form/ImportForm.php:55
+msgid "Attribute \"identifier\" of \"eadid\""
+msgstr ""
+
+#: src/Form/ImportForm.php:56
+msgid "Attribute \"url\" of \"eadid\""
+msgstr ""
+
+#: src/Form/ImportForm.php:57
+msgid "Custom, in the field below"
+msgstr ""
+
+#: src/Form/ImportForm.php:72
+msgid "Custom base ids"
+msgstr ""
+
+#: src/Form/ImportForm.php:73
+msgid ""
+"If \"custom\" is selected, specify the base ids to use, one by line, for "
+"each EAD xml file.\n"
+"\n"
+"The base id should be linked to one of the attributes of the \"eadid\" "
+"element: \"publicid\", \"identifier\" or \"url\"."
+msgstr ""
+
+#: src/Form/ImportForm.php:79
+msgid "attribute value = base id of the file"
+msgstr ""
+
+#: src/Form/ImportForm.php:87
+msgid "Fix namespace/doctype"
+msgstr ""
+
+#: src/Form/ImportForm.php:88
+msgid ""
+"Some parsers don’t support the use of a doctype or require a namespace. Some "
+"servers don’t allow to fetch an external dtd, for example if the server is "
+"secure (https), but not the dtd (http only). This fix tries to bypass this "
+"issue."
+msgstr ""
+
+#: src/Form/ImportForm.php:119
+msgid ""
+"Each base id, one by line, should have a name separated from the value with "
+"a \"=\"."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:49
+msgid "Unallowed request."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:72
+msgid "You should select either a file to upload, either a url to fetch."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:79
+msgid "With custom base id, you should fill the params."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:92
+msgid "Unable to fetch data from the url."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:99
+msgid "The url returns empty data."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:117
+msgid "No file provided."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:122
+msgid "An error occurred when uploading the file."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:127
+#, php-format
+msgid "Wrong media type (\"%s\") for file."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:133
+msgid "The file is empty."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:144
+msgid "The xml doesn’t have the required namespace."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:148
+msgid ""
+"Some parsers don’t allow entities and doctypes too, or the server cannot "
+"fetch the dtd. Check the box below to try to fix this issue."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:171
+msgid ""
+"Import started in background (<a href=\"{job_url}\">job #{job_id}</a>). This "
+"may take a while."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:179
+msgid ""
+"The process is done in two steps: import of all pieces as items, then "
+"creation of the tree structure to link them."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:181
+msgid "Import start failed"
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:295
+#: src/Controller/Admin/EadController.php:316
+msgid "Missing temporary directory configuration"
+msgstr ""
+
+#: src/Job/ArchiveFolder/Tool/ManagePaths.php:44
+msgid "The main uri should be set to use the class \"ManagePaths\"."
+msgstr ""
+
+#: src/Job/ArchiveFolder/Tool/ManagePaths.php:310
+#, php-format
+msgid "The file path \"%s\" is not correct."
+msgstr ""
+
+#: src/Job/ImportEad.php:142
+msgid "Import started"
+msgstr ""
+
+#: src/Job/ImportEad.php:146
+msgid "No file submitted."
+msgstr ""
+
+#: src/Job/ImportEad.php:152
+msgid "Unable to cache file."
+msgstr ""
+
+#: src/Job/ImportEad.php:157
+msgid "File is empty."
+msgstr ""
+
+#: src/Job/ImportEad.php:181
+msgid ""
+"The source contains entities and cannot be processed automatically currently."
+msgstr ""
+
+#: src/Job/ImportEad.php:186
+msgid "The source contains a doctype that has been removed."
+msgstr ""
+
+#: src/Job/ImportEad.php:205
+msgid "Starting import of {number} converted resources."
+msgstr ""
+
+#: src/Job/ImportEad.php:213
+msgid "Starting creation of links between archival components."
+msgstr ""
+
+#: src/Job/ImportEad.php:219
+msgid "Import of {number} converted resources completed."
+msgstr ""
+
+#: src/Job/ImportEad.php:223
+msgid "Import completed"
+msgstr ""
+
+#: src/Job/ImportEad.php:270 src/Job/ImportEad.php:309
+#: src/Job/ImportEad.php:322 src/Job/ImportEad.php:333
+msgid "filepath"
+msgstr ""
+
+#: src/Job/ImportEad.php:289
+msgid ""
+"Error during copy of the configuration file from \"{filepath}\" into "
+"\"{filepath2}\"."
+msgstr ""
+
+#: src/Job/ImportEad.php:303
+msgid ""
+"Error during update of the element \"baseid\" in the configuration file "
+"\"{filepath}\"."
+msgstr ""
+
+#: src/Job/ImportEad.php:317
+msgid ""
+"An empty file was the result of the first conversion. Check your input file "
+"and your params."
+msgstr ""
+
+#: src/Job/ImportEad.php:328
+msgid ""
+"An empty file was the result of the second conversion. Check your input file "
+"and your params."
+msgstr ""
+
+#: src/Job/ImportEad.php:348
+msgid ""
+"No resources were created after conversion of the input file into Omeka "
+"items."
+msgstr ""
+
+#: src/Job/ImportEad.php:401
+msgid "Index #{index}: Item #{item_id} created."
+msgstr ""
+
+#: src/Job/ImportEad.php:406
+msgid "Index #{index}: Unable to create an item."
+msgstr ""
+
+#: src/Job/ImportEad.php:431
+msgid "Index #{index}: item #{item_id} has no identifier."
+msgstr ""
+
+#: src/Job/ImportEad.php:445
+msgid ""
+"Index #{index}: duplicate identifier \"{identifier}\" for item #{item_id} "
+"and item #{itemId}."
+msgstr ""
+
+#: src/Job/ImportEad.php:457
+msgid ""
+"This import has no identifier, so no link can be created between component."
+msgstr ""
+
+#: src/Job/ImportEad.php:611
+#, php-format
+msgid "The EAD file \"%s\" cannot be processed [last step]."
+msgstr ""
+
+#: src/Job/ImportEad.php:1279
+#, php-format
+msgid "The file \"%s\" inside document \"%s\" is incorrect."
+msgstr ""
+
+#: src/Job/ImportEad.php:1291
+#, php-format
+msgid "The file path \"%s\" is incorrect."
+msgstr ""
+
+#: src/Job/ImportEad.php:1376
+#, php-format
+msgid "The record type \"%s\" is not managed."
+msgstr ""
+
+#: src/Job/ImportEad.php:1397
+msgid "action"
+msgstr ""
+
+#: src/Job/ImportEad.php:1431
+msgid "path"
+msgstr ""
+
+#: src/Job/ImportEad.php:1484
+msgid "collection_id"
+msgstr ""
+
+#: src/Job/ImportEad.php:1510
+#, php-format
+msgid "The item type \"%s\" does not exist."
+msgstr ""
+
+#: src/Job/ImportEad.php:1521
+#, php-format
+msgid "The item type id \"%d\" does not exist."
+msgstr ""
+
+#: config/module.config.php:55
+msgid "EAD import"
+msgstr ""
