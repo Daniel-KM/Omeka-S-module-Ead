@@ -29,7 +29,7 @@ TODO
     exclude-result-prefixes="xsl xs mapper ead">
 
     <!-- Import mapper api. -->
-    <xsl:import href="../external/Ead2DCterms/XmlMapper/xslt_2/xml_mapper_helpers.xsl" />
+    <xsl:import href="./Ead2DCterms/XmlMapper/xslt_2/xml_mapper_helpers.xsl" />
 
     <xsl:output method="xml" indent="yes" encoding="UTF-8" />
     <xsl:strip-space elements="*" />
