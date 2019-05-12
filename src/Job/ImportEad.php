@@ -25,6 +25,54 @@ class ImportEad extends AbstractJob
     protected $xslParts = '/data/xsl/ead_parts.xsl';
     protected $xmlConfig = '/data/xsl/Ead2DCterms/ead2dcterms-omeka_config.xml';
 
+    protected $mapItemTypeToClasses = [
+        'Archival Finding Aid' => 'ead:ArchivalFindingAid',
+        'Component' => 'ead:Component',
+    ];
+
+    protected $mapElementsToProperties= [
+        'EAD Archive:Description of Subordinate Components' => 'ead:dsc',
+
+        'EAD Archive:Descriptive Identification : Heading' => 'ead:unitDIdHead',
+        'EAD Archive:Descriptive Identification : Note' => 'ead:unitDIdNote',
+        'EAD Archive:Appraisal Information' => 'ead:unitAppraisal',
+        'EAD Archive:Arrangement' => 'ead:unitArrangement',
+        'EAD Archive:Biography or History' => 'ead:unitBiogHist',
+        'EAD Archive:Index' => 'ead:unitIndex',
+        'EAD Archive:Level' => 'ead:unitLevel',
+        'EAD Archive:Note' => 'ead:unitNote',
+        'EAD Archive:Other Descriptive Data' => 'ead:unitOdd',
+        'EAD Archive:Processing Information' => 'ead:unitProcessInfo',
+        'EAD Archive:Scope and Content' => 'ead:unitScopeContent',
+        'EAD Archive:Heading' => 'ead:unitHead',
+        'EAD Archive:Table Head' => 'ead:unitTHead',
+
+        'Item Type Metadata:Edition Statement' => 'ead:headerEditionStmt',
+        'Item Type Metadata:Publication Statement' => 'ead:headerPublicationStmt',
+        'Item Type Metadata:Note statement' => 'ead:headerNoteStmt',
+        'Item Type Metadata:Profile description : Creation' => 'ead:headerProfileDescCreation',
+        'Item Type Metadata:Profile description : Descriptive Rules' => 'ead:headerProfileDescDescRules',
+        'Item Type Metadata:Profile description : Language Usage' => 'ead:headerProfileDescLangUsage',
+        'Item Type Metadata:Revision Description : Change' => 'ead:headerRevisionDescChange',
+        'Item Type Metadata:Revision Description : List' => 'ead:headerRevisionDescList',
+
+        'Item Type Metadata:Front matter : Title page' => 'ead:frontmatterTitlePage',
+        'Item Type Metadata:Front matter : Title page : Block Quote' => 'ead:frontmatterTitlePageBlockQuote',
+        'Item Type Metadata:Front matter : Title page : Chronology list' => 'ead:frontmatterTitlePageChronList',
+        'Item Type Metadata:Front matter : Title page : List' => 'ead:frontmatterTitlePageList',
+        'Item Type Metadata:Front matter : Title page : Note' => 'ead:frontmatterTitlePageNote',
+        'Item Type Metadata:Front matter : Title page : Paragraph' => 'ead:frontmatterTitlePageP',
+        'Item Type Metadata:Front matter : Title page : Table' => 'ead:frontmatterTitlePageTable',
+        'Item Type Metadata:Front matter : Division' => 'ead:frontmatterDiv',
+    ];
+
+    /**
+     * List of item types mapped with resource classes ids.
+     *
+     * @var array
+     */
+    protected $itemTypes = [];
+
     /**
      * @var string
      */
@@ -53,6 +101,11 @@ class ImportEad extends AbstractJob
      * @var \BulkImport\Mvc\Controller\Plugin\ProcessXslt
      */
     protected $processXslt;
+
+    /**
+     * @var \BulkImport\Mvc\Controller\Plugin\Bulk
+     */
+    protected $bulk;
 
     /**
      * @var \ManagePaths
@@ -91,9 +144,13 @@ class ImportEad extends AbstractJob
 
         $this->metadataFilepath = $this->uri;
 
-        $this->processXslt = $this->getServiceLocator()->get('ControllerPluginManager')->get('processXslt');
+        $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
+        $this->processXslt = $pluginManager->get('processXslt');
+        $this->bulk = $pluginManager->get('bulk');
         $this->managePaths = new ManagePaths($this->uri, $this->job->getArgs());
         $this->managePaths->setMetadataFilepath($this->metadataFilepath);
+
+        $this->prepareItemTypes();
 
         $this->prepareDocuments();
 
@@ -120,12 +177,25 @@ class ImportEad extends AbstractJob
     }
 
     /**
+     * Prepare list of item types and resource class ids.
+     */
+    protected function prepareItemTypes()
+    {
+        $bulk = $this->bulk();
+        foreach ($this->mapItemTypeToClasses as $itemType => $class) {
+            $id = $bulk->getResourceClassId($class);
+            if ($id) {
+                $this->itemTypes[$id] = $itemType;
+            }
+        }
+    }
+
+    /**
      * Prepare the list of documents set inside the current metadata file.
      */
     protected function prepareDocuments()
     {
         $this->resources = new ArrayObject;
-        $documents = $this->resources;
 
         // If the xml is too large, the php memory may be increased so it can be
         // processed directly via SimpleXml.
@@ -184,7 +254,7 @@ class ImportEad extends AbstractJob
 
         // Now, the xml is a standard document, so process it via standard way.
         // Standard way means apply another xslt on the metadata filepath.
-        // $documents = $this->mappingDocument->listDocuments($xmlpath);
+        // $this->resources = $this->mappingDocument->listDocuments($xmlpath);
         $this->xmlpath = $xmlpath;
         $this->prepareNormalizedDocuments();
         $this->setXmlFormat();
@@ -402,6 +472,16 @@ class ImportEad extends AbstractJob
         return $processXslt($uri, $stylesheet, $output, $parameters);
     }
 
+    /**
+     * Get the bulk plugin.
+     *
+     * @return \BulkImport\Mvc\Controller\Plugin\Bulk
+     */
+    protected function bulk()
+    {
+        return $this->bulk;
+    }
+
     /***
      *  Adapted from ArchiveFolder Mapping Document and Abstract.
      *
@@ -553,7 +633,14 @@ class ImportEad extends AbstractJob
         $dcs = $record->xpath($xpath);
         foreach ($dcs as $dc) {
             $text = $this->innerXML($dc);
-            $current['metadata']['dcterms'][$dc->getName()][] = $text;
+            $term = 'dcterms:' . $dc->getName();
+            $current['metadata'][$term][] = [
+                'property_id' => $this->bulk()->getPropertyId($term),
+                'type' => 'literal',
+                '@language' => '',
+                '@value' => $text,
+                'is_public' => true,
+            ];
         }
 
         // The xml needs the Dublin Core namespaces in some cases.
@@ -581,10 +668,28 @@ class ImportEad extends AbstractJob
                     continue;
                 }
 
+                $elementTerm = $elementSetName . ':' . $elementName;
+                if (!isset($this->mapElementsToProperties[$elementTerm])) {
+                    $this->logger()->warn(sprintf('Element "%s" doesn’t exist.', $elementTerm));
+                    continue;
+                }
+
+                $term = $this->mapElementsToProperties[$elementTerm];
+                $termId = $this->bulk()->getPropertyId($term);
+                if (empty($termId)) {
+                    $this->logger()->warn(sprintf('Element "%s" has no equivalent term.', $elementTerm));
+                    continue;
+                }
                 $data = $element->data;
                 foreach ($data as $value) {
                     $text = $this->innerXML($value);
-                    $current['metadata'][$elementSetName][$elementName][] = $text;
+                    $current['metadata'][$term][] = [
+                        'property_id' => $termId,
+                        'type' => 'literal',
+                        '@language' => '',
+                        '@value' => $text,
+                        'is_public' => true,
+                    ];
                 }
             }
         }
@@ -1100,33 +1205,31 @@ class ImportEad extends AbstractJob
                     unset($document['specific']['item_type_id']);
                 }
 
-                /* // TODO Convert item type to resource class.
-                 $itemTypes = get_db()->getTable('ItemType')->findPairsForSelectForm();
+                // TODO Convert item type to resource class.
+                // $itemTypes = get_db()->getTable('ItemType')->findPairsForSelectForm();
                 // Check the item type name.
                 if (!empty($document['specific']['item_type_name'])) {
-                    $itemTypeId = array_search(strtolower($document['specific']['item_type_name']), array_map('strtolower', $itemTypes));
-                    if (!$itemTypeId) {
+                    $itemTypeId = array_search(strtolower($document['specific']['item_type_name']), array_map('strtolower', $this->itemTypes));
+                    if ($itemTypeId) {
                         throw new \Exception(sprintf(
                             'The item type "%s" does not exist.', // @translate
                             $document['specific']['item_type_name']
                         ));
                     }
-                    $document['specific']['item_type_name'] = $itemTypes[$itemTypeId];
+                    $document['specific']['item_type_name'] = $this->mapItemTypeToClasses[$this->itemTypes[$itemTypeId]];
                 }
 
                 // Check the item type id.
                 elseif (!empty($document['specific']['item_type_id'])) {
-                    /*
-                    if (!isset($itemTypes[$document['specific']['item_type_id']])) {
+                    if (!isset($this->itemTypes[$document['specific']['item_type_id']])) {
                         throw new \Exception(sprintf(
                             'The item type id "%d" does not exist.', // @translate
                             $document['specific']['item_type_id']
                         ));
                     }
                     unset($document['specific']['item_type_id']);
-                    $document['specific']['item_type_name'] = $itemTypes[$document['specific']['item_type_id']];
+                    $document['specific']['item_type_name'] = $this->mapItemTypeToClasses[$this->itemTypes[$document['specific']['item_type_id']]];
                 }
-                */
                 break;
 
             case 'Collection':
@@ -1213,15 +1316,15 @@ class ImportEad extends AbstractJob
         // Normalize the element texts.
         // Remove the Omeka 'html', that slows down process and that can be
         // determined automatically when it is really needed.
-        foreach ($document['metadata'] as /* $elementSetName => */ &$elements) {
-            foreach ($elements as /* $elementName => */ &$elementTexts) {
-                foreach ($elementTexts as &$elementText) {
-                    if (is_array($elementText)) {
-                        $elementText = $elementText['text'];
-                    }
+        foreach ($document['metadata'] as /* $term => */ $values) {
+            foreach ($values as &$value) {
+                if (is_array($value['@value'])) {
+                    $value['@value'] = trim(isset($value['@value']['text']) ? $value['@value']['text'] : reset($value['@value']));
                 }
                 // Trim the metadata too to avoid useless spaces.
-                $elementTexts = array_map('trim', $elementTexts);
+                else {
+                    $value['@value'] = trim($value['@value']);
+                }
             }
         }
 
