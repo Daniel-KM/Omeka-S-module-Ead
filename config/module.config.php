@@ -7,6 +7,11 @@ return [
             dirname(__DIR__) . '/view',
         ],
     ],
+    'view_helpers' => [
+        'factories' => [
+            'ead' => Service\ViewHelper\EadFactory::class,
+        ],
+    ],
     'form_elements' => [
         'factories' => [
             Form\ImportForm::class => \Omeka\Form\Factory\InvokableFactory::class,
