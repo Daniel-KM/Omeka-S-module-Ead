@@ -162,7 +162,15 @@ class ImportEad extends AbstractJob
 
         $this->prepareItemTypes();
 
-        $this->prepareDocuments();
+        $result = $this->prepareDocuments();
+        if (!$result) {
+            return;
+        }
+
+        $this->logger()->info(
+            'Starting import of {number} converted resources.', // @translate
+            ['number' => count($this->resources)]
+        );
 
         $this->importDocuments();
 
@@ -202,6 +210,8 @@ class ImportEad extends AbstractJob
 
     /**
      * Prepare the list of documents set inside the current metadata file.
+     *
+     * @return bool
      */
     protected function prepareDocuments()
     {
@@ -211,8 +221,8 @@ class ImportEad extends AbstractJob
         // processed directly via SimpleXml.
         $this->xml = simplexml_load_file($this->metadataFilepath, \SimpleXMLElement::class, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_PARSEHUGE);
         if ($this->xml === false) {
-            $message = sprintf('The file "%s" is not xml.', $this->metadataFilepath); // @translate
-            throw new \Exception($message);
+            $this->logger()->err('The file "{filepath}" is not xml.', ['filepath' => $this->metadataFilepath]); // @translate
+            return false;
         }
 
         $this->xml->registerXPathNamespace(self::XML_PREFIX, self::XML_NAMESPACE);
@@ -229,12 +239,11 @@ class ImportEad extends AbstractJob
         $tempConfig = tempnam(sys_get_temp_dir(), 'ead2dcterms_');
         $result = copy($configuration, $tempConfig);
         if (empty($result)) {
-            $message = sprintf(
-                'Error during copy of the configuration file from "%s" into "%s".', // @translate
-                $configuration,
-                $tempConfig
+            $this->logger()->err(
+                'Error during copy of the configuration file from "{filepath}" into "{filepath2}".', // @translate
+                ['filepath' => $configuration, 'filepath2' => $tempConfig]
             );
-            throw new \Exception($message);
+            return false;
         }
 
         $configuration = $tempConfig;
@@ -244,23 +253,38 @@ class ImportEad extends AbstractJob
         $baseIdXml = $this->getBaseIdXml();
         $result = $this->updateConfig($configuration, $baseIdXml);
         if (empty($result)) {
-            $message = sprintf('Error during update of the element "baseid" in the configuration file "%s".', $configuration); // @translate
-            throw new \Exception($message);
+            $this->logger()->err(
+                'Error during update of the element "baseid" in the configuration file "{filepath}".', // @translate
+                ['filepath' => $configuration]
+            );
+            return false;
         }
+
+        $this->logger()->debug('File used for internal configuration: {filepath}.', ['filepath' => $configuration]); // @translate
 
         $extraParameters['configuration'] = $configuration;
 
         // Process the xml file via the stylesheet.
         $intermediatePath = $this->processXslt($this->metadataFilepath, $this->xslMain, '', $extraParameters);
         if (filesize($intermediatePath) == 0) {
-            return;
+            $this->logger()->err(
+                'An empty file was the result of the first conversion. Check your input file and your params.' // @translate
+            );
+            return false;
         }
+
+        $this->logger()->debug('Intermediate converted file: {filepath}.', ['filepath' => $intermediatePath]); // @translate
 
         // Process the intermediate xml file via the secondary stylesheet.
         $xmlpath = $this->processXslt($intermediatePath, $this->xslSecondary);
         if (filesize($xmlpath) == 0) {
-            return;
+            $this->logger()->err(
+                'An empty file was the result of the second conversion. Check your input file and your params.' // @translate
+            );
+            return false;
         }
+
+        $this->logger()->debug('Final converted file: {filepath}.', ['filepath' => $xmlpath]); // @translate
 
         // Now, the xml is a standard document, so process it via standard way.
         // Standard way means apply another xslt on the metadata filepath.
@@ -272,8 +296,17 @@ class ImportEad extends AbstractJob
         // The deletion of duplicate metadatat is done manually via module Next.
         // $this->removeDuplicateMetadata();
 
+        if (empty($this->resources)) {
+            $this->logger()->log(Logger::WARN,
+                'No resources were created after conversion of the input file into Omeka items.' // @translate
+            );
+            return false;
+        }
+
         // Reset each intermediate xml metadata by the original one.
         $this->setXmlMetadata();
+
+        return true;
     }
 
     /**
