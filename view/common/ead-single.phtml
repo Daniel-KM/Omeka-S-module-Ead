@@ -1,0 +1,41 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ * @var \Omeka\Api\Representation\ItemRepresentation $item
+ * @var \Omeka\Api\Representation\ItemRepresentation $data
+ * @var string $type
+ * @var array $options
+ */
+
+$translate = $this->plugin('translate');
+
+if (empty($data) && !empty($options['hideIfEmpty'])):
+    return;
+endif;
+
+if (empty($options['title'])):
+    $title = [
+        'root' => $translate('Archival finding aid'),
+        'archivalFindingAid' => $translate('Archival finding aid'),
+        'archivalDescription' => $translate('Archival description'),
+        'broader' => $translate('Upper component'),
+        'custom' =>  $translate('Specific component'),
+    ];
+    $title = $title[$type];
+else:
+    $title = $options['title'];
+endif;
+
+?>
+<div class="ead ead-single">
+    <h4><?= $title ?></h4>
+    <?php if (empty($data)): ?>
+    <p>
+        <?= $translate('No content.') ?>
+    </p>
+    <?php else: ?>
+    <p>
+        <?= $data->linkPretty() ?>
+    </p>
+    <?php endif; ?>
+</div>

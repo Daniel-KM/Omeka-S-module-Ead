@@ -229,4 +229,62 @@ class Ead extends AbstractHelper
     {
         return $this->ead->branch();
     }
+
+    /**
+     * Display part of an archive.
+     *
+     * @param string|array|ItemRepresentation $typeOrData Type may be "archivalFindingAid"
+     * (is "root"), or "archivalDescription" or "broader" (single), "narrowers",
+     * "relateds", "siblings", "ascendants", or "descendants" (list), or "tree"
+     * or "branch" (tree).
+     * @param array $options Options for the partial. Managed default are
+     * "title", "hideIfEmpty", and "partial".
+     * @return string
+     */
+    public function display($typeOrData, array $options = [])
+    {
+        $type = $data = $typeOrData;
+        if (is_string($typeOrData)) {
+            $partialTypes = [
+                'archivalFindingAid' => 'single',
+                'archivalDescription' => 'single',
+                'root' => 'single',
+                'broader' => 'single',
+                'narrowers' => 'list',
+                'relateds' => 'list',
+                'siblings' => 'list',
+                'ascendants' => 'list',
+                'descendants' => 'list',
+                'tree' => 'tree',
+                'branch' => 'tree',
+            ];
+            if (isset($partialTypes[$type])) {
+                $data = $this->{$type}();
+                $partial = $partialTypes[$type];
+            } else {
+                return '';
+            }
+        } else {
+            $type = 'custom';
+            if (is_array($data)) {
+                $partial = is_array(reset($data)) ? 'tree' : 'list';
+            } else {
+                $partial = 'single';
+            }
+        }
+
+        $partial = empty($options['partial'])
+            ? 'common/ead-' . $partial
+            : $options['partial'];
+        unset($options['partial']);
+
+        $options += ['title' => '', 'hideIfEmpty' => false];
+
+        return $this->getView()->partial($partial, [
+            'item' => $this->item,
+            'type' => $type,
+            'data' => $data,
+            'options' => $options,
+        ]);
+    }
 }

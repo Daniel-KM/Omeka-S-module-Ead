@@ -1,0 +1,107 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ * @var \Omeka\Api\Representation\ItemRepresentation $item
+ * @var \Omeka\Api\Representation\ItemRepresentation[] $data
+ * @var string $type
+ * @var array $options
+ */
+
+$translate = $this->plugin('translate');
+
+if (empty($data) && !empty($options['hideIfEmpty'])):
+    return;
+endif;
+
+if (empty($options['title'])):
+    $title = [
+        'tree' => $translate('Tree'),
+        'branch' => $translate('Branch'),
+        'custom' => $translate('Tree'),
+    ];
+    $title = $title[$type];
+else:
+    $title = $options['title'];
+endif;
+
+?>
+<div class="ead ead-tree">
+    <h4><?= $title ?></h4>
+    <?php if (empty($data)): ?>
+    <p>
+        <?= $translate('No component.') ?>
+    </p>
+    <?php else: ?>
+    <?php // This process doesn't use a recursive function, but supposes that the depth is < 10. ?>
+    <?php // TODO Add an option for depth of the tree and use a recursive function. ?>
+    <ul>
+        <?php foreach ($data as $component_1): ?>
+        <li><?= $component_1['current']->linkPretty() ?>
+        <?php if (!empty($component_1['narrowers'])): ?>
+            <ul>
+            <?php foreach ($component_1['narrowers'] as $component_2): ?>
+                <li><?= $component_2['current']->linkPretty() ?>
+                <?php if (!empty($component_2['narrowers'])): ?>
+                    <ul>
+                    <?php foreach ($component_2['narrowers'] as $component_3): ?>
+                        <li><?= $component_3['current']->linkPretty() ?>
+                        <?php if (!empty($component_3['narrowers'])): ?>
+                            <ul>
+                            <?php foreach ($component_3['narrowers'] as $component_4): ?>
+                                <li><?= $component_4['current']->linkPretty() ?>
+                                <?php if (!empty($component_4['narrowers'])): ?>
+                                    <ul>
+                                    <?php foreach ($component_4['narrowers'] as $component_5): ?>
+                                        <li><?= $component_5['current']->linkPretty() ?>
+                                        <?php if (!empty($component_5['narrowers'])): ?>
+                                            <ul>
+                                            <?php foreach ($component_5['narrowers'] as $component_6): ?>
+                                                <li><?= $component_6['current']->linkPretty() ?>
+                                                <?php if (!empty($component_6['narrowers'])): ?>
+                                                    <ul>
+                                                    <?php foreach ($component_6['narrowers'] as $component_7): ?>
+                                                        <li><?= $component_7['current']->linkPretty() ?>
+                                                        <?php if (!empty($component_7['narrowers'])): ?>
+                                                            <ul>
+                                                            <?php foreach ($component_7['narrowers'] as $component_8): ?>
+                                                                <li><?= $component_8['current']->linkPretty() ?>
+                                                                <?php if (!empty($component_8['narrowers'])): ?>
+                                                                    <ul>
+                                                                    <?php foreach ($component_8['narrowers'] as $component_9): ?>
+                                                                        <li><?= $component_9['current']->linkPretty() ?>
+                                                                    <?php endforeach; ?>
+                                                                   </ul>
+                                                               <?php endif; ?>
+                                                               </li>
+                                                            <?php endforeach; ?>
+                                                           </ul>
+                                                       <?php endif; ?>
+                                                       </li>
+                                                    <?php endforeach; ?>
+                                                   </ul>
+                                               <?php endif; ?>
+                                               </li>
+                                            <?php endforeach; ?>
+                                           </ul>
+                                       <?php endif; ?>
+                                       </li>
+                                    <?php endforeach; ?>
+                                   </ul>
+                                   <?php endif; ?>
+                               </li>
+                               <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <?php endif; ?>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+</div>

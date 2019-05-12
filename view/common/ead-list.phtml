@@ -1,0 +1,44 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ * @var \Omeka\Api\Representation\ItemRepresentation $item
+ * @var \Omeka\Api\Representation\ItemRepresentation[] $data
+ * @var string $type
+ * @var array $options
+ */
+
+$translate = $this->plugin('translate');
+
+if (empty($data) && !empty($options['hideIfEmpty'])):
+    return;
+endif;
+
+if (empty($options['title'])):
+    $title = [
+        'narrowers' => $translate('Sub-components'),
+        'relateds' => $translate('Related components'),
+        'siblings' => $translate('Sibling components'),
+        'ascendants' => $translate('Ascendant components'),
+        'descendants' => $translate('Descendant components'),
+        'custom' => $translate('Linked components'),
+    ];
+    $title = $title[$type];
+else:
+    $title = $options['title'];
+endif;
+
+?>
+<div class="ead ead-list">
+    <h4><?= $title ?></h4>
+    <?php if (empty($data)): ?>
+    <p>
+        <?= $translate('No component.') ?>
+    </p>
+    <?php else: ?>
+    <ul>
+        <?php foreach ($data as $concept): ?>
+        <li><?= $concept->linkPretty() ?></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+</div>
