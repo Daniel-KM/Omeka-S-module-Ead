@@ -182,7 +182,7 @@ class ImportEad extends AbstractJob
                     );
                     return;
                 }
-                $this->logger()->err(
+                $this->logger()->warn(
                     'The source contains a doctype that has been removed.' // @translate
                 );
             }
