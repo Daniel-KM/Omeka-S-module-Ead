@@ -94,10 +94,10 @@ class Module extends AbstractModule
                 'o:namespace_uri' => 'http://www.loc.gov/ead',
                 'o:prefix' => 'ead',
                 'o:label' => 'EAD for Omeka', // @translate
-                'o:comment' => 'An adaptation of the Encoded Archival Description (EAD) as a vocabulary. Only elements that can’t be easily mapped into Dublin Core Terms, mainly textual content, are added.', // @translate
+                'o:comment' => 'An adaptation of the Encoded Archival Description (EAD) as a vocabulary. Only elements that can’t be easily mapped into Dublin Core Terms, mainly textual content, are added. Textual content will be imported as xhtml in a future version.', // @translate
             ],
             'strategy' => 'file',
-            'file' => __DIR__ . '/data/vocabularies/ead-for-omekas.ttl',
+            'file' => __DIR__ . '/data/vocabularies/ead-for-omeka-s.ttl',
             'format' => 'turtle',
         ];
         $installResources->createVocabulary($vocabulary);
