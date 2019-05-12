@@ -80,6 +80,19 @@ The base id should be linked to one of the attributes of the \"eadid\" element: 
             ],
         ]);
 
+        $this->add([
+            'name' => 'ead_bypass_check',
+            'type' => Element\Checkbox::class,
+            'options' => [
+                'label' => 'Fix namespace/doctype', // @translate
+                'info'  => 'Some parsers don’t support the use of a doctype or require a namespace. Some servers don’t allow to fetch an external dtd, for example if the server is secure (https), but not the dtd (http only). This fix tries to bypass this issue.', //@translate
+            ],
+            'attributes' => [
+                'id' => 'file',
+                'required' => false,
+            ],
+        ]);
+
         $inputFilter = $this->getInputFilter();
         $inputFilter->add([
             'name' => 'url',

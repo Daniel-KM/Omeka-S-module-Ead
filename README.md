@@ -18,6 +18,30 @@ See general end user documentation for [Installing a module].
 A xslt 2 processor may need to be installed too. See install help of [Bulk Import].
 
 
+Usage
+-----
+
+Import the xml ead (format 2002), then browse the items.
+
+By default, the relations are displayed in the standard block "Linked resources"
+of the items. To see the full tree structure and the other relations, the theme
+may be updated to use the view helper `$this->ead($item)`.
+
+Note about EAD files.
+
+Some ead files cannot be imported: some parsers don’t manage the doctype,
+require the namespace, or don’t manage entities or cdata. Furthermore, a secure
+server (https) may not be able to fetch an unsecure dtd (http). A quick fix is
+available, but if it is not enough, you have to remove doctype and entities and
+to add the namespace.
+
+
+TODO
+----
+
+* Manage the xml with a doctype (via full domxml, not simplexml).
+
+
 Warning
 -------
 

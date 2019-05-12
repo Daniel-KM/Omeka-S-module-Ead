@@ -139,10 +139,17 @@ class BulkImportEadController extends AbstractActionController
             'xmlRoot' => \BulkImportEad\Job\ImportEad::XML_ROOT,
             'xmlNamespace' => \BulkImportEad\Job\ImportEad::XML_NAMESPACE,
             'xmlPrefix' => \BulkImportEad\Job\ImportEad::XML_PREFIX,
+            // TODO Remove this fix (try to load the dtd statically?).
+            'bypass' => $args['ead_bypass_check'],
         ])) {
             $this->messenger()->addError(
                 sprintf('The xml doesn’t have the required namespace.') // @translate
             );
+            if (!$args['ead_bypass_check']) {
+                $this->messenger()->addError(
+                    sprintf('Some parsers don’t allow entities and doctypes too, or the server cannot fetch the dtd. Check the box below to try to fix this issue.') // @translate
+                );
+            }
             return $view;
         }
 
@@ -231,6 +238,11 @@ class BulkImportEadController extends AbstractActionController
      */
     protected function validateXml($filepath, $args)
     {
+        $bypass = !empty($args['bypass']);
+        if ($bypass) {
+            return true;
+        }
+
         $xmlRoot = $args['xmlRoot'];
         $xmlNamespace = $args['xmlNamespace'];
         if (empty($xmlRoot) || empty($xmlNamespace)) {
@@ -256,7 +268,7 @@ class BulkImportEadController extends AbstractActionController
             }
 
             $result = false;
-            while ($reader->read()) {
+            while (@$reader->read()) {
                 if ($reader->name !== '#comment') {
                     $result = ($reader->name === $xmlRoot
                             && $reader->getAttribute('xmlns') === $xmlNamespace)

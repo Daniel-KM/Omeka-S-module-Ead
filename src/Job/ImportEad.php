@@ -162,6 +162,32 @@ class ImportEad extends AbstractJob
         $isRemote = $this->getArg('isRemote');
         $this->uri = $isRemote ? $this->getArg('url') : $file['name'];
 
+        $bypass = $this->getArg('ead_bypass_check');
+        if ($bypass) {
+            $isValid = $this->validateXml($this->metadataFilepath, [
+                'xmlRoot' => \BulkImportEad\Job\ImportEad::XML_ROOT,
+                'xmlNamespace' => \BulkImportEad\Job\ImportEad::XML_NAMESPACE,
+                'xmlPrefix' => \BulkImportEad\Job\ImportEad::XML_PREFIX,
+            ]);
+            if (!$isValid) {
+                $this->fixXml();
+                $isValid = $this->validateXml($this->metadataFilepath, [
+                    'xmlRoot' => \BulkImportEad\Job\ImportEad::XML_ROOT,
+                    'xmlNamespace' => \BulkImportEad\Job\ImportEad::XML_NAMESPACE,
+                    'xmlPrefix' => \BulkImportEad\Job\ImportEad::XML_PREFIX,
+                ]);
+                if (!$isValid) {
+                    $this->logger()->err(
+                        'The source contains entities and cannot be processed automatically currently.' // @translate
+                    );
+                    return;
+                }
+                $this->logger()->err(
+                    'The source contains a doctype that has been removed.' // @translate
+                );
+            }
+        }
+
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $this->processXslt = $pluginManager->get('processXslt');
         $this->bulk = $pluginManager->get('bulk');
@@ -239,8 +265,8 @@ class ImportEad extends AbstractJob
         // If the xml is too large, the php memory may be increased so it can be
         // processed directly via SimpleXml.
         $this->xml = simplexml_load_file($this->metadataFilepath, \SimpleXMLElement::class, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_PARSEHUGE);
-        if ($this->xml === false) {
-            $this->logger()->err('The file "{filepath}" is not xml.', ['filepath' => $this->metadataFilepath]); // @translate
+        if (empty($this->xml)) {
+            $this->logger()->err('The file "{filepath}" is not xml, uses a non-fetchable dtd, or contains non manageable entities.', ['filepath' => $this->metadataFilepath]); // @translate
             return false;
         }
 
@@ -653,6 +679,73 @@ class ImportEad extends AbstractJob
             }
         }
         return trim($result);
+    }
+
+    /**
+     * Check if the current file is a xml metadata one.
+     *
+     * Copy of the same method in the controller.
+     * @see \BulkImport\Controller\Admin\ImportController::validateXml()
+     *
+     * @param string $filepath
+     * @param array $args Specific values needed: xmlRoot, namespace.
+     * @return boolean
+     */
+    protected function validateXml($filepath, $args)
+    {
+        $bypass = !empty($args['bypass']);
+        if ($bypass) {
+            return true;
+        }
+
+        $xmlRoot = $args['xmlRoot'];
+        $xmlNamespace = $args['xmlNamespace'];
+        if (empty($xmlRoot) || empty($xmlNamespace)) {
+            return false;
+        }
+
+        // XmlReader is the quickest and the simplest for such a check, localy
+        // or remotely.
+        $reader = new XMLReader;
+        $result = $reader->open($filepath, null, LIBXML_NSCLEAN);
+        if ($result) {
+            // The xml prefix may or may not be used.
+            // TODO Use the prefix used in the xml file for the specified namespace.
+            $xmlPrefix = $args['xmlPrefix'];
+            if (empty($xmlPrefix)) {
+                $xmlPrefixNs = '';
+                $xmlPrefixRoot = '';
+            }
+            // Check the existing prefix.
+            else {
+                $xmlPrefixNs = 'xmlns:' . $xmlPrefix;
+                $xmlPrefixRoot = $xmlPrefix . ':' . $xmlRoot;
+            }
+
+            $result = false;
+            while (@$reader->read()) {
+                if ($reader->name !== '#comment') {
+                    $result = ($reader->name === $xmlRoot
+                        && $reader->getAttribute('xmlns') === $xmlNamespace)
+                        || ($xmlPrefixNs
+                            && $reader->name === $xmlPrefixRoot
+                            && $reader->getAttribute($xmlPrefixNs) === $xmlNamespace);
+                        break;
+                }
+            }
+        }
+        $reader->close();
+        return $result;
+    }
+
+    protected function fixXml()
+    {
+        $xml = file_get_contents($this->metadataFilepath);
+        $xml = str_replace('<ead>', '<ead xmlns="http://www.loc.gov/ead">', $xml);
+        $pattern = '~(^\s*<\?xml .*?\?>\s*)(<!DOCTYPE .*?>)(\s*(?:<ead>|<ead ))~s';
+        $subst = '$1$3';
+        $xml = preg_replace($pattern, $subst, $xml);
+        file_put_contents($this->metadataFilepath, $xml);
     }
 
     /**
