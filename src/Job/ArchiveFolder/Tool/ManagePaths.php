@@ -2,15 +2,34 @@
 /**
  * Manage paths: tool that can be used by other classes.
  *
- * @package ArchiveFolder
+ * @see Plugin ArchiveFolder for Omeka Classic.
  */
-class ArchiveFolder_Tool_ManagePaths
+class ManagePaths
 {
     protected $_uri;
     protected $_parameters;
 
     // The full path to current metadata file is required for some functions.
     protected $_metadataFilepath;
+
+    /**
+     * Can be "Filesystem" or "Url".
+     *
+     * @var string
+     */
+    protected $transfer_strategy;
+
+    /**
+     * Options from Archive Folder.
+     *
+     * @var array
+     */
+    protected $archive_folder = [
+        'local_folders' => [
+            // This option may not works on some servers with symbolic links.
+            'check_realpath' => false,
+        ],
+    ];
 
     /**
      * Constructor of the class.
@@ -22,11 +41,13 @@ class ArchiveFolder_Tool_ManagePaths
     public function __construct($uri, $parameters)
     {
         if (empty($uri)) {
-            $message = __('The main uri should be set to use the class "ArchiveFolder_Tool_ManagePaths".');
-            throw new Exception($message);
+            $message = 'The main uri should be set to use the class "ManagePaths".'; // @translate
+            throw new \Exception($message);
         }
         $this->_uri = $uri;
         $this->_parameters = $parameters;
+
+        $this->transfer_strategy = $this->isRemote($uri) ? 'Url' : 'Filesystem';
     }
 
     /**
@@ -71,7 +92,7 @@ class ArchiveFolder_Tool_ManagePaths
             // Not root, so add the separator.
             else {
                 // Probably needed for Windows compatibility.
-                $separator = $this->_getParameter('transfer_strategy') != 'Filesystem'
+                $separator = $this->transfer_strategy != 'Filesystem'
                     ? '/'
                     : DIRECTORY_SEPARATOR;
 
@@ -164,7 +185,7 @@ class ArchiveFolder_Tool_ManagePaths
 
         if ($urlencode) {
             // Check if it is not already an encoded url.
-            if ($this->_getParameter('transfer_strategy') == 'Filesystem') {
+            if ($this->transfer_strategy == 'Filesystem') {
                 $filepath = $this->rawurlencodeRelativePath($filepath);
             }
             return $this->_uri . '/' . $filepath;
@@ -200,9 +221,9 @@ class ArchiveFolder_Tool_ManagePaths
         }
 
         // Set and check real path for local paths (security).
-        if ($this->_getParameter('transfer_strategy') == 'Filesystem') {
-            $settings = Zend_Registry::get('archive_folder');
-            if ($settings->local_folders->check_realpath == '1'
+        if ($this->transfer_strategy == 'Filesystem') {
+            $settings = $this->archive_folder;
+            if ($settings['local_folders']['check_realpath'] == '1'
                     && realpath($absolutePath) != $absolutePath
                 ) {
                 $absolutePath = null;
@@ -286,7 +307,7 @@ class ArchiveFolder_Tool_ManagePaths
 
         $relativeFilepath = $this->getRelativePathToFolder($path);
         if (empty($relativeFilepath)) {
-            throw new ArchiveFolder_BuilderException(__('The file path "%s" is not correct.', $path));
+            throw new \Exception(sprintf('The file path "%s" is not correct.', $path)); // @translate
         }
 
         // Check if this is an external url.
