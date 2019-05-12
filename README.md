@@ -10,7 +10,7 @@ Installation
 
 First, install the modules [Generic] and [Bulk Import].
 
-The module uses an external library, [`Ead2SDCterms`], so use the release zip to
+The module uses an external library, [`Ead2DCterms`], so use the release zip to
 install it, or use and init the source.
 
 See general end user documentation for [installing a module].
@@ -112,7 +112,8 @@ Copyright
 [Generic]: https://github.com/Daniel-KM/Omeka-S-module-Generic
 [Installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
 [module issues]: https://github.com/Daniel-KM/Omeka-S-module-EAD/issues
-[`Ead2SDCterms`]: https://github.com/Daniel-KM/Ead2DCterms
+[`Ead2DCterms`]: https://github.com/Daniel-KM/Ead2DCterms
+[`Ead.zip`]: https://github.com/Daniel-KM/Omeka-S-module-Ead/releases
 [`data/xsl`]: https://github.com/Daniel-KM/Omeka-S-module-Ead/tree/master/data/xsl
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html

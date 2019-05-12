@@ -19,5 +19,38 @@
         "module",
         "import",
         "EAD"
-    ]
+    ],
+    "config": {
+        "vendor-dir": "vendor/asset"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "daniel-km/ead2dcterms",
+                "version": "1",
+                "dist": {
+                    "url": "https://github.com/Daniel-KM/Ead2DCterms/archive/master.zip",
+                    "type": "zip"
+                }
+            }
+        }
+    ],
+    "require": {
+        "slowprog/composer-copy-file": "~0.3",
+        "daniel-km/ead2dcterms": "*"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "SlowProg\\CopyFile\\ScriptHandler::copy"
+        ],
+        "post-update-cmd": [
+            "SlowProg\\CopyFile\\ScriptHandler::copy"
+        ]
+    },
+    "extra": {
+        "copy-file": {
+            "vendor/asset/daniel-km/ead2dcterms/": "data/xsl/Ead2DCterms/"
+        }
+    }
 }
