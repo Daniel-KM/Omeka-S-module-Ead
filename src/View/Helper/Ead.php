@@ -31,8 +31,8 @@ class Ead extends AbstractHelper
      * @param ItemRepresentation $item
      * @return mixed.
      */
-     public function __invoke(ItemRepresentation $item)
-     {
+    public function __invoke(ItemRepresentation $item)
+    {
         $ead = $this->ead;
         $ead($item);
         return $this;

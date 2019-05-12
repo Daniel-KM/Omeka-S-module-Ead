@@ -17,7 +17,7 @@ class ImportForm extends Form
             'type' => Element\File::class,
             'options' => [
                 'label' => 'EAD xml file', // @translate
-                'info'  => 'The EAD is a simple xml file.', //@translate
+                'info' => 'The EAD is a simple xml file.', //@translate
             ],
             'attributes' => [
                 'id' => 'file',
@@ -30,7 +30,7 @@ class ImportForm extends Form
             'type' => Element\Url::class,
             'options' => [
                 'label' => 'EAD xml url', // @translate
-                'info'  => 'The EAD may be available via a end point.', //@translate
+                'info' => 'The EAD may be available via a end point.', //@translate
             ],
             'attributes' => [
                 'id' => 'url',
@@ -85,7 +85,7 @@ The base id should be linked to one of the attributes of the \"eadid\" element: 
             'type' => Element\Checkbox::class,
             'options' => [
                 'label' => 'Fix namespace/doctype', // @translate
-                'info'  => 'Some parsers don’t support the use of a doctype or require a namespace. Some servers don’t allow to fetch an external dtd, for example if the server is secure (https), but not the dtd (http only). This fix tries to bypass this issue.', //@translate
+                'info' => 'Some parsers don’t support the use of a doctype or require a namespace. Some servers don’t allow to fetch an external dtd, for example if the server is secure (https), but not the dtd (http only). This fix tries to bypass this issue.', //@translate
             ],
             'attributes' => [
                 'id' => 'file',
@@ -130,7 +130,7 @@ The base id should be linked to one of the attributes of the \"eadid\" element: 
      * @param string $value The value to check.
      * @param array $values
      * @param string $message
-     * @return boolean
+     * @return bool
      */
     public function validateExtraParameters($value, array $values, $option = null)
     {

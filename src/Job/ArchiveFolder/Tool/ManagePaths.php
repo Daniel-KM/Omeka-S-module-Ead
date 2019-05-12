@@ -36,7 +36,6 @@ class ManagePaths
      *
      * @param string $uri The uri of the folder.
      * @param array $parameters The parameters to use for the mapping.
-     * @return void
      */
     public function __construct($uri, $parameters)
     {
@@ -78,7 +77,7 @@ class ManagePaths
         // This static save all relative metadata path by uri and by path.
         // The sub-array for uri is needed for the tests.
         // The metadataFilePath should be absolute to avoid duplicates.
-        static $relativeMetadataPaths = array();
+        static $relativeMetadataPaths = [];
 
         if (empty($this->_metadataFilepath)) {
             return '';
@@ -171,7 +170,7 @@ class ManagePaths
      *
      * @param string $filepath This is a relative filepath (if url, string is
      * returned as it).
-     * @param boolean $urlencode If true, URL-encode according to RFC 3986.
+     * @param bool $urlencode If true, URL-encode according to RFC 3986.
      * This parameter is not used for external urls, that should be already
      * formatted.
      * @return string The url.
@@ -191,7 +190,7 @@ class ManagePaths
             return $this->_uri . '/' . $filepath;
         }
 
-        return $this->_uri . '/' . str_replace(array('#', '?'), array('%23', '%3F'), $filepath);
+        return $this->_uri . '/' . str_replace(['#', '?'], ['%23', '%3F'], $filepath);
     }
 
     /**
@@ -287,9 +286,9 @@ class ManagePaths
      * Get url inside the repository folder from a path inside a metadata file.
      *
      * @param string $path File path, local or remote, absolute or relative.
-     * @param boolean $absolute If true, returns an absolute url (always if
+     * @param bool $absolute If true, returns an absolute url (always if
      * external urls).
-     * @param boolean $urlencode If true, URL-encode according to RFC 3986.
+     * @param bool $urlencode If true, URL-encode according to RFC 3986.
      * This parameter is not used for external urls, that should be already
      * formatted.
      * @return string|null Absolute url to the resource inside repository, or
@@ -323,7 +322,7 @@ class ManagePaths
         }
 
         // A normal relative path.
-        $path = str_replace(array('#', '?'), array('%23', '%3F'), $relativeFilepath);
+        $path = str_replace(['#', '?'], ['%23', '%3F'], $relativeFilepath);
         return $absolute
             ? $this->_uri . '/' . $path
             : $path;
@@ -347,7 +346,7 @@ class ManagePaths
      * Determine if a uri is a remote url or a local path.
      *
      * @param string $uri
-     * @return boolean
+     * @return bool
      */
     public function isRemote($uri)
     {
@@ -361,7 +360,7 @@ class ManagePaths
      * Determine if a uri is inside the folder (main uri).
      *
      * @param string $uri
-     * @return boolean
+     * @return bool
      */
     public function isInsideFolder($uri)
     {

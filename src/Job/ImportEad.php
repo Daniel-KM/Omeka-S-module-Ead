@@ -30,7 +30,7 @@ class ImportEad extends AbstractJob
         'Component' => 'ead:Component',
     ];
 
-    protected $mapElementsToProperties= [
+    protected $mapElementsToProperties = [
         'EAD Archive:Description of Subordinate Components' => 'ead:dsc',
 
         'EAD Archive:Descriptive Identification : Heading' => 'ead:unitDIdHead',
@@ -208,7 +208,8 @@ class ImportEad extends AbstractJob
 
         $this->importDocuments();
 
-        $this->logger()->log(Logger::INFO,
+        $this->logger()->log(
+            Logger::INFO,
             'Starting creation of links between archival components.' // @translate
         );
 
@@ -342,7 +343,8 @@ class ImportEad extends AbstractJob
         // $this->removeDuplicateMetadata();
 
         if (empty($this->resources)) {
-            $this->logger()->log(Logger::WARN,
+            $this->logger()->log(
+                Logger::WARN,
                 'No resources were created after conversion of the input file into Omeka items.' // @translate
             );
             return false;
@@ -689,7 +691,7 @@ class ImportEad extends AbstractJob
      *
      * @param string $filepath
      * @param array $args Specific values needed: xmlRoot, namespace.
-     * @return boolean
+     * @return bool
      */
     protected function validateXml($filepath, $args)
     {
@@ -730,7 +732,7 @@ class ImportEad extends AbstractJob
                         || ($xmlPrefixNs
                             && $reader->name === $xmlPrefixRoot
                             && $reader->getAttribute($xmlPrefixNs) === $xmlNamespace);
-                        break;
+                    break;
                 }
             }
         }
@@ -1146,7 +1148,7 @@ class ImportEad extends AbstractJob
      * Check if a string is an xml cdata one.
      *
      * @param string $string
-     * @return boolean
+     * @return bool
      */
     protected function isCdata($string)
     {
@@ -1163,7 +1165,7 @@ class ImportEad extends AbstractJob
     {
         // Bail early if no array notation detected.
         if (!strstr($string, '[')) {
-            $array = array($string);
+            $array = [$string];
         }
         // Convert array notation.
         else {
@@ -1187,10 +1189,10 @@ class ImportEad extends AbstractJob
     {
         $nextKey = array_pop($keys);
         if (count($keys)) {
-            $temp = array($nextKey => $value);
+            $temp = [$nextKey => $value];
             return $this->nestArray($keys, $temp);
         }
-        return array($nextKey => $value);
+        return [$nextKey => $value];
     }
 
     /**
@@ -1239,7 +1241,7 @@ class ImportEad extends AbstractJob
                 && empty($document['files'])
             ) {
                 // Special check for process: remove xml, automatically added.
-                $check = array_diff_key($document['process'], array('xml' => true, 'format_xml' => true));
+                $check = array_diff_key($document['process'], ['xml' => true, 'format_xml' => true]);
                 if (empty($check)) {
                     unset($documents[$key]);
                     continue;
@@ -1326,7 +1328,7 @@ class ImportEad extends AbstractJob
         }
 
         // Normalization for any record.
-        $process = array(
+        $process = [
             'record type' => null,
             'action' => null,
             'name' => null,
@@ -1334,7 +1336,7 @@ class ImportEad extends AbstractJob
             'internal id' => null,
             'format_xml' => null,
             'xml' => null,
-        );
+        ];
         $document['process'] = array_intersect_key(
             array_merge($document['extra'], $document['process']),
             $process
@@ -1369,7 +1371,7 @@ class ImportEad extends AbstractJob
 
         // Normalize and check the record type.
         $recordType = ucfirst(strtolower($document['process']['record type']));
-        if (!in_array($recordType, array('File', 'Item', 'Collection'))) {
+        if (!in_array($recordType, ['File', 'Item', 'Collection'])) {
             throw new \Exception(sprintf(
                 'The record type "%s" is not managed.', // @translate
                 $document['process']['record type']
@@ -1554,8 +1556,8 @@ class ImportEad extends AbstractJob
                     // Old releases.
                     'original_filename',
                     'md5',
-                ])
-            ) {
+                ]
+            )) {
                 if ($document['process']['record type'] == 'File') {
                     // Quick checks for old releases.
                     if ($lowerIdentifierField == 'original_filename') {
@@ -1571,8 +1573,8 @@ class ImportEad extends AbstractJob
                         'authentication',
                         'original_filename',
                         'md5',
-                    ])
-                ) {
+                    ]
+                )) {
                     $message = sprintf(
                         'The identifier field "%s" is not allowed for the record type "%s".',
                         $document['process']['identifier field'],

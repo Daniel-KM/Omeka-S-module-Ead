@@ -83,9 +83,7 @@ class EadController extends AbstractActionController
 
         // TODO Check the file during validation inside the form.
         $isRemote = !empty($args['url'])
-            && (empty($files)
-                || (isset($files['file']['error']) && $files['file']['error'] == UPLOAD_ERR_NO_FILE
-            ));
+            && (empty($files) || (isset($files['file']['error']) && $files['file']['error'] == UPLOAD_ERR_NO_FILE));
         if ($isRemote) {
             $url = $args['url'];
             $filepath = $this->downloadToTemp($url);
@@ -119,7 +117,7 @@ class EadController extends AbstractActionController
                 'No file provided.' // @translate
             );
             return $view;
-        }elseif (!empty($file['error'])) {
+        } elseif (!empty($file['error'])) {
             $this->messenger()->addError(
                 'An error occurred when uploading the file.' // @translate
             );
@@ -234,7 +232,7 @@ class EadController extends AbstractActionController
      *
      * @param string $filepath
      * @param array $args Specific values needed: xmlRoot, namespace.
-     * @return boolean
+     * @return bool
      */
     protected function validateXml($filepath, $args)
     {
