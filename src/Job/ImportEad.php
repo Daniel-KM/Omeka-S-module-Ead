@@ -174,6 +174,12 @@ class ImportEad extends AbstractJob
 
         $this->importDocuments();
 
+        $this->logger()->log(Logger::INFO,
+            'Starting creation of links between archival components.' // @translate
+        );
+
+        $this->linkDocuments();
+
         $this->logger()->log(Logger::NOTICE, 'Import completed'); // @translate
     }
 
@@ -316,7 +322,7 @@ class ImportEad extends AbstractJob
     {
         $api = $this->getServiceLocator()->get('ControllerPluginManager')->get('api');
 
-        foreach ($this->resources as $resource) {
+        foreach ($this->resources as &$resource) {
             ++$this->indexResource;
             ++$this->indexItem;
 
@@ -349,6 +355,7 @@ class ImportEad extends AbstractJob
             $item = $api->create('items', $data, $filesData)->getContent();
 
             if ($item) {
+                $resource['process']['@id'] = $item->id();
                 $this->logger()->info(
                     'Index #{index}: Item #{item_id} created.', // @translate
                     ['index' => $this->indexResource, 'item_id' => $item->id()]
@@ -358,6 +365,92 @@ class ImportEad extends AbstractJob
                     'Index #{index}: Unable to create an item.', // @translate
                     ['index' => $this->indexResource]
                 );
+            }
+        }
+    }
+
+    /**
+     * Create linked resources for dcterms:isPartOf and dcterms:hasPart.
+     */
+    protected function linkDocuments()
+    {
+        $api = $this->getServiceLocator()->get('ControllerPluginManager')->get('api');
+
+        // First, create a list of all identifiers.
+        $identifiers = [];
+        $index = 0;
+        foreach ($this->resources as &$resource) {
+            ++$index;
+            if (empty($resource['process']['@id'])) {
+                continue;
+            }
+            $data = $resource['metadata'];
+            if (empty($data['dcterms:identifier'])) {
+                $this->logger()->warn(
+                    'Index #{index}: item #{item_id} has no identifier.', // @translate
+                    ['index' => $index, 'item_id' => $resource['process']['@id']]
+                );
+                continue;
+            }
+
+            foreach ($data['dcterms:identifier'] as $value) {
+                if (!strlen($value['@value'])) {
+                    continue;
+                }
+                if (isset($identifiers[$value['@value']])
+                    && $identifiers[$value['@value']] !== $resource['process']['@id']
+                ) {
+                    $this->logger()->warn(
+                        'Index #{index}: duplicate identifier "{identifier}" for item #{item_id} and item #{itemId}.', // @translate
+                        ['index' => $index, 'item_id' => $identifiers[$value['@value']], 'itemId' => $resource['process']['@id']]
+                    );
+                    continue;
+                }
+                $identifiers[$value['@value']] = $resource['process']['@id'];
+            }
+        }
+        unset($resource);
+
+        if (!count($identifiers)) {
+            $this->logger()->warn(
+                'This import has no identifier, so no link can be created between component.' // @translate
+            );
+            return;
+        }
+
+        // Second, update items with dcterms:isPartOf and dcterms:hasPart.
+        $index = 0;
+        foreach ($this->resources as &$resource) {
+            ++$index;
+            if (empty($resource['process']['@id'])) {
+                continue;
+            }
+
+            $toUpdate = false;
+            $data = $resource['metadata'];
+            foreach (['dcterms:hasPart', 'dcterms:isPartOf'] as $term) {
+                if (isset($data[$term])) {
+                    foreach ($data[$term] as $key => $value) {
+                        if (!strlen($value['@value'])) {
+                            continue;
+                        }
+                        if (isset($identifiers[$value['@value']])) {
+                            $toUpdate = true;
+                            $data[$term][$key] = [
+                                'property_id' => $value['property_id'],
+                                'type' => 'resource',
+                                '@language' => '',
+                                '@value' => '',
+                                '@id' => '',
+                                'value_resource_id' => $identifiers[$value['@value']],
+                                'is_public' => $value['is_public'],
+                            ];
+                        }
+                    }
+                }
+            }
+            if ($toUpdate) {
+                $api->update('items', $resource['process']['@id'], $data, [], ['isPartial' => true]);
             }
         }
     }
