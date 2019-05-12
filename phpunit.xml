@@ -13,8 +13,8 @@
     beStrictAboutTodoAnnotatedTests="true"
     >
     <testsuites>
-        <testsuite name="BulkImportEad">
-            <directory suffix="Test.php">test/BulkImportEadTest</directory>
+        <testsuite name="Ead">
+            <directory suffix="Test.php">test/EadTest</directory>
         </testsuite>
     </testsuites>
     <filter>

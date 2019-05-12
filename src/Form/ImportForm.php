@@ -1,5 +1,5 @@
 <?php
-namespace BulkImportEad\Form;
+namespace Ead\Form;
 
 use Zend\Filter;
 use Zend\Form\Element;

@@ -1,7 +1,7 @@
 <?php
-namespace BulkImportEad\Service\ViewHelper;
+namespace Ead\Service\ViewHelper;
 
-use BulkImportEad\View\Helper\Ead;
+use Ead\View\Helper\Ead;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 

@@ -6,4 +6,4 @@ use OmekaTestHelper\Bootstrap;
 
 Bootstrap::bootstrap(__DIR__);
 Bootstrap::loginAsAdmin();
-Bootstrap::enableModule('BulkImportEad');
+Bootstrap::enableModule('Ead');

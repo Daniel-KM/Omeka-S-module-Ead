@@ -1,5 +1,5 @@
 <?php
-namespace BulkImportEad\Mvc\Controller\Plugin;
+namespace Ead\Mvc\Controller\Plugin;
 
 use Doctrine\ORM\EntityManager;
 use Omeka\Api\Representation\ItemRepresentation;

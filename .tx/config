@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[omeka-s.bulk-import-ead]
+[omeka-s.ead]
 file_filter = languages/<lang>.po
 source_file = languages/template.pot
 source_lang = en

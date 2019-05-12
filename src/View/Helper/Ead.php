@@ -1,8 +1,8 @@
 <?php
-namespace BulkImportEad\View\Helper;
+namespace Ead\View\Helper;
 
 use Omeka\Api\Representation\ItemRepresentation;
-use BulkImportEad\Mvc\Controller\Plugin\Ead as EadPlugin;
+use Ead\Mvc\Controller\Plugin\Ead as EadPlugin;
 use Zend\View\Helper\AbstractHelper;
 
 class Ead extends AbstractHelper
@@ -50,7 +50,7 @@ class Ead extends AbstractHelper
      * The class may not be a ead class in order to manage sub classes of it,
      * not directly managed by Omeka.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::isArchive()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::isArchive()
      * @return bool
      */
     public function isArchive()
@@ -61,7 +61,7 @@ class Ead extends AbstractHelper
     /**
      * This item is an archival finding aid  if it has the class ead:ArchivalFindingAid.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::isArchivalFindingAid()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::isArchivalFindingAid()
      * @return bool
      */
     public function isArchivalFindingAid()
@@ -72,7 +72,7 @@ class Ead extends AbstractHelper
     /**
      * This item is an archival description  if it has the class ead:ArchivalDescription.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::isArchivalDescription()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::isArchivalDescription()
      * @return bool
      */
     public function isArchivalDescription()
@@ -84,7 +84,7 @@ class Ead extends AbstractHelper
      * This item is a component if it has the class Component or belongs to an
      * archival finding aid.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::isComponent()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::isComponent()
      * @return bool
      */
     public function isComponent()
@@ -95,7 +95,7 @@ class Ead extends AbstractHelper
     /**
      * Get the archival finding aid of this item.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::archivalFindingAid()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::archivalFindingAid()
      * @return ItemRepresentation|null
      */
     public function archivalFindingAid()
@@ -106,7 +106,7 @@ class Ead extends AbstractHelper
     /**
      * Get the archival description of this item.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::archivalDescription()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::archivalDescription()
      * @return ItemRepresentation|null
      */
     public function archivalDescription()
@@ -117,7 +117,7 @@ class Ead extends AbstractHelper
     /**
      * Check if the item is the root, i.e. archival finding aid itself.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::isRoot()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::isRoot()
      * @return bool
      */
     public function isRoot()
@@ -130,7 +130,7 @@ class Ead extends AbstractHelper
      *
      * @todo Check performance to get the root item.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::root()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::root()
      * @return ItemRepresentation|null
      */
     public function root()
@@ -141,7 +141,7 @@ class Ead extends AbstractHelper
     /**
      * Get the broader concept of this item.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::broader()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::broader()
      * @return ItemRepresentation|null
      */
     public function broader()
@@ -152,7 +152,7 @@ class Ead extends AbstractHelper
     /**
      * Get the narrower concepts of this item.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::narrowers()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::narrowers()
      * @return ItemRepresentation[]
      */
     public function narrowers()
@@ -165,7 +165,7 @@ class Ead extends AbstractHelper
      *
      * Note: They may be outside of the finding aid.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::relateds()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::relateds()
      * @return ItemRepresentation[]
      */
     public function relateds()
@@ -178,7 +178,7 @@ class Ead extends AbstractHelper
      *
      * To include this item, get the children (narrower iterms) of the broader
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::siblings()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::siblings()
      * @return ItemRepresentation[]
      */
     public function siblings()
@@ -189,7 +189,7 @@ class Ead extends AbstractHelper
     /**
      * Get the list of ascendants of this item, from closest to archival finding aid.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::ascendants()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::ascendants()
      * @return ItemRepresentation[]
      */
     public function ascendants()
@@ -200,7 +200,7 @@ class Ead extends AbstractHelper
     /**
      * Get the list of descendants of this item.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::descendants()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::descendants()
      * @return ItemRepresentation[]
      */
     public function descendants()
@@ -211,7 +211,7 @@ class Ead extends AbstractHelper
     /**
      * Get the hierarchy of this item from the root (archival finding aid).
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::tree()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::tree()
      * @return ItemRepresentation[]
      */
     public function tree()
@@ -222,7 +222,7 @@ class Ead extends AbstractHelper
     /**
      * Get the hierarchy branch of this item, self included.
      *
-     * @uses \BulkImportEad\Mvc\Controller\Plugin\Ead::branch()
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::branch()
      * @return array
      */
     public function branch()

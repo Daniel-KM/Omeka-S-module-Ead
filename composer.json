@@ -1,5 +1,5 @@
 {
-    "name": "daniel-km/omeka-s-module-bulk-import-ead",
+    "name": "daniel-km/omeka-s-module-ead",
     "description": "Bulk import EAD (module for Omeka S)",
     "type": "library",
     "license": "CECILL-2.1",
@@ -9,9 +9,9 @@
             "email": "Daniel.packagist@Berthereau.net"
         }
     ],
-    "homepage": "https://github.com/Daniel-KM/Omeka-S-module-BulkImportEad",
+    "homepage": "https://github.com/Daniel-KM/Omeka-S-module-Ead",
     "support": {
-        "issues": "https://github.com/Daniel-KM/Omeka-S-module-BulkImportEad/issues",
+        "issues": "https://github.com/Daniel-KM/Omeka-S-module-Ead/issues",
         "forum": "https://forum.omeka.org/"
     },
     "keywords": [

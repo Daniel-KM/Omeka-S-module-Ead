@@ -1,5 +1,5 @@
 <?php
-namespace BulkImportEad;
+namespace Ead;
 
 /*
  * Copyright Daniel Berthereau, 2015-2019
@@ -34,9 +34,9 @@ use Generic\AbstractModule;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Bulk import EAD
+ * EAD
  *
- * Allows to import EAD from an xml file.
+ * Allows to import and to display EAD from an xml file.
  *
  * @copyright Daniel Berthereau, 2015-2019
  * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
@@ -54,7 +54,7 @@ class Module extends AbstractModule
             throw new \Omeka\Module\Exception\ModuleCannotInstallException(
                 sprintf(
                     'EAD2DCTerms library should be installed. See %sReadme%s.',
-                    '<a href="https://github.com/Daniel-KM/Omeka-S-module-BulkImportEad#install">',
+                    '<a href="https://github.com/Daniel-KM/Omeka-S-module-Ead#install">',
                     '</a>'
                 )
             );

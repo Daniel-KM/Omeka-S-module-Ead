@@ -10,7 +10,7 @@ Installation
 
 First, install the modules [Generic] and [Bulk Import].
 
-Uncompress files and rename module folder `BulkImportEad`. Then install it like any
+Uncompress files and rename module folder `Ead`. Then install it like any
 other Omeka module and follow the config instructions.
 
 See general end user documentation for [Installing a module].

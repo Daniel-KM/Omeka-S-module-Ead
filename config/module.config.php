@@ -1,5 +1,5 @@
 <?php
-namespace BulkImportEad;
+namespace Ead;
 
 return [
     'view_manager' => [
@@ -19,7 +19,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\Admin\BulkImportEadController::class => Service\Controller\Admin\BulkImportEadControllerFactory::class,
+            Controller\Admin\EadController::class => Service\Controller\Admin\EadControllerFactory::class,
         ],
     ],
     'controller_plugins' => [
@@ -31,16 +31,16 @@ return [
         'routes' => [
             'admin' => [
                 'child_routes' => [
-                    'bulk-import-ead' => [
+                    'ead' => [
                         'type' => \Zend\Router\Http\Segment::class,
                         'options' => [
-                            'route' => '/bulk-import-ead[/:action]',
+                            'route' => '/ead[/:action]',
                             'constraints' => [
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ],
                             'defaults' => [
-                                '__NAMESPACE__' => 'BulkImportEad\Controller\Admin',
-                                'controller' => Controller\Admin\BulkImportEadController::class,
+                                '__NAMESPACE__' => 'Ead\Controller\Admin',
+                                'controller' => Controller\Admin\EadController::class,
                                 'action' => 'index',
                             ],
                         ],
@@ -52,8 +52,8 @@ return [
     'navigation' => [
         'AdminModule' => [
             [
-                'label' => 'Bulk import EAD', // @translate
-                'route' => 'admin/bulk-import-ead',
+                'label' => 'EAD import', // @translate
+                'route' => 'admin/ead',
             ],
         ],
     ],

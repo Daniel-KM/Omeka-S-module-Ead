@@ -1,15 +1,15 @@
 <?php
-namespace BulkImportEad\Controller\Admin;
+namespace Ead\Controller\Admin;
 
-use BulkImportEad\Form\ImportForm;
-use BulkImportEad\Job\ImportEad;
+use Ead\Form\ImportForm;
+use Ead\Job\ImportEad;
 use finfo;
 use Log\Stdlib\PsrMessage;
 use XMLReader;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class BulkImportEadController extends AbstractActionController
+class EadController extends AbstractActionController
 {
     /**
      * @var array
@@ -26,14 +26,14 @@ class BulkImportEadController extends AbstractActionController
 
     public function indexAction()
     {
-        return $this->redirect()->toRoute('admin/bulk-import-ead', ['action' => 'import']);
+        return $this->redirect()->toRoute('admin/ead', ['action' => 'import']);
     }
 
     public function importAction()
     {
-        /** @var \BulkImportEad\Form\ImportForm $form */
+        /** @var \Ead\Form\ImportForm $form */
         $form = $this->getForm(ImportForm::class);
-        $form->setAttribute('action', $this->url()->fromRoute('admin/bulk-import-ead', ['action' => 'upload']));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/ead', ['action' => 'upload']));
         $form->init();
 
         $view = new ViewModel;
@@ -48,15 +48,15 @@ class BulkImportEadController extends AbstractActionController
             $this->messenger()->addError(
                 sprintf('Unallowed request.') // @translate
             );
-            return $this->redirect()->toRoute('admin/bulk-import-ead', ['action' => 'import']);
+            return $this->redirect()->toRoute('admin/ead', ['action' => 'import']);
         }
 
-        /** @var \BulkImportEad\Form\ImportForm $form */
+        /** @var \Ead\Form\ImportForm $form */
         $form = $this->getForm(ImportForm::class);
 
         $view = new ViewModel;
         $view->setVariable('form', $form);
-        $view->setTemplate('bulk-import-ead/admin/bulk-import-ead/import');
+        $view->setTemplate('ead/admin/ead/import');
 
         $post = $this->params()->fromPost();
         $form->setData($post);
@@ -136,9 +136,9 @@ class BulkImportEadController extends AbstractActionController
             );
             return $view;
         } elseif (!$this->validateXml($file['tmp_name'], [
-            'xmlRoot' => \BulkImportEad\Job\ImportEad::XML_ROOT,
-            'xmlNamespace' => \BulkImportEad\Job\ImportEad::XML_NAMESPACE,
-            'xmlPrefix' => \BulkImportEad\Job\ImportEad::XML_PREFIX,
+            'xmlRoot' => \Ead\Job\ImportEad::XML_ROOT,
+            'xmlNamespace' => \Ead\Job\ImportEad::XML_NAMESPACE,
+            'xmlPrefix' => \Ead\Job\ImportEad::XML_PREFIX,
             // TODO Remove this fix (try to load the dtd statically?).
             'bypass' => $args['ead_bypass_check'],
         ])) {
@@ -183,7 +183,7 @@ class BulkImportEadController extends AbstractActionController
             $this->messenger()->addError('Import start failed'); // @translate
         }
 
-        return $this->redirect()->toRoute('admin/bulk-import-ead', ['action' => 'import']);
+        return $this->redirect()->toRoute('admin/ead', ['action' => 'import']);
     }
 
     /**

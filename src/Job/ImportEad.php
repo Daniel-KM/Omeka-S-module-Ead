@@ -1,5 +1,5 @@
 <?php
-namespace BulkImportEad\Job;
+namespace Ead\Job;
 
 // Include a file from Omeka Classic plugin "Archive Folder".
 // TODO Remove or simplify these functions to manage paths.
@@ -165,16 +165,16 @@ class ImportEad extends AbstractJob
         $bypass = $this->getArg('ead_bypass_check');
         if ($bypass) {
             $isValid = $this->validateXml($this->metadataFilepath, [
-                'xmlRoot' => \BulkImportEad\Job\ImportEad::XML_ROOT,
-                'xmlNamespace' => \BulkImportEad\Job\ImportEad::XML_NAMESPACE,
-                'xmlPrefix' => \BulkImportEad\Job\ImportEad::XML_PREFIX,
+                'xmlRoot' => \Ead\Job\ImportEad::XML_ROOT,
+                'xmlNamespace' => \Ead\Job\ImportEad::XML_NAMESPACE,
+                'xmlPrefix' => \Ead\Job\ImportEad::XML_PREFIX,
             ]);
             if (!$isValid) {
                 $this->fixXml();
                 $isValid = $this->validateXml($this->metadataFilepath, [
-                    'xmlRoot' => \BulkImportEad\Job\ImportEad::XML_ROOT,
-                    'xmlNamespace' => \BulkImportEad\Job\ImportEad::XML_NAMESPACE,
-                    'xmlPrefix' => \BulkImportEad\Job\ImportEad::XML_PREFIX,
+                    'xmlRoot' => \Ead\Job\ImportEad::XML_ROOT,
+                    'xmlNamespace' => \Ead\Job\ImportEad::XML_NAMESPACE,
+                    'xmlPrefix' => \Ead\Job\ImportEad::XML_PREFIX,
                 ]);
                 if (!$isValid) {
                     $this->logger()->err(

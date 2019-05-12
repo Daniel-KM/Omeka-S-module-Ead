@@ -1,7 +1,7 @@
 <?php
-namespace BulkImportEad\Service\ControllerPlugin;
+namespace Ead\Service\ControllerPlugin;
 
-use BulkImportEad\Mvc\Controller\Plugin\Ead;
+use Ead\Mvc\Controller\Plugin\Ead;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
