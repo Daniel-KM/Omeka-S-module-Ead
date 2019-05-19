@@ -1,0 +1,27 @@
+<?php
+$translate = $this->plugin('translate');
+?>
+<div id="ead-queries" class="field" role="group" aria-labelledby="by-is-archive-label">
+    <div class="field-meta">
+        <span id="is-archive-label" class="label"><?php echo $translate('Is archive'); ?></span>
+    </div>
+    <div class="inputs">
+        <div class="value">
+            <?php
+            $select = (new \Zend\Form\Element\Radio())
+                ->setName('is_archive')
+                ->setValueOptions([
+                    '1' => 'Yes', // @translate
+                    '0' => 'No', // @translate
+                    '' => 'Any', // @translate
+                ])
+                ->setAttributes([
+                    'class' => 'query-datetime',
+                    'value' => isset($query['is_archive']) ? $query['is_archive'] : '',
+                    'aria-label' => $translate('Is archive'),
+                ]);
+            echo $this->formRadio($select);
+            ?>
+        </div>
+    </div>
+</div>

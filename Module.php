@@ -30,7 +30,12 @@ namespace Ead;
 
 require_once dirname(__DIR__) . '/Generic/AbstractModule.php';
 
+use Doctrine\ORM\QueryBuilder;
 use Generic\AbstractModule;
+use Omeka\Api\Adapter\AbstractResourceEntityAdapter;
+use Omeka\Api\Adapter\ItemAdapter;
+use Zend\EventManager\Event;
+use Zend\EventManager\SharedEventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -78,6 +83,132 @@ class Module extends AbstractModule
 
         $this->setServiceLocator($serviceLocator);
         $this->installResources();
+    }
+
+    public function attachListeners(SharedEventManagerInterface $sharedEventManager)
+    {
+        $sharedEventManager->attach(
+            \Omeka\Api\Adapter\ItemAdapter::class,
+            'api.search.query',
+            [$this, 'searchQuery']
+        );
+
+        // Add the search field to the advanced search pages.
+        // TODO add filter for public site too.
+        $sharedEventManager->attach(
+            'Omeka\Controller\Admin\Item',
+            'view.advanced_search',
+            [$this, 'displayAdvancedSearch']
+        );
+        // Filter the search filters for the advanced search pages.
+        $sharedEventManager->attach(
+            'Omeka\Controller\Admin\Item',
+            'view.search.filters',
+            [$this, 'filterSearchFilters']
+        );
+    }
+
+    /**
+     * Helper to filter search queries.
+     *
+     * @param Event $event
+     */
+    public function searchQuery(Event $event)
+    {
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
+        $qb = $event->getParam('queryBuilder');
+        $adapter = $event->getTarget();
+        $query = $event->getParam('request')->getContent();
+        if ($adapter instanceof ItemAdapter) {
+            $this->searchIsArchive($qb, $adapter, $query);
+        }
+    }
+
+    /**
+     * Display the advanced search form via partial.
+     *
+     * @param Event $event
+     */
+    public function displayAdvancedSearch(Event $event)
+    {
+        $query = $event->getParam('query', []);
+        $partials = $event->getParam('partials', []);
+
+        $resourceType = $event->getParam('resourceType');
+        if ($resourceType === 'item') {
+            $query['is_archive'] = isset($query['is_archive']) ? $query['is_archive'] : '';
+            $partials[] = 'common/advanced-search/ead';
+        }
+
+        $event->setParam('query', $query);
+        $event->setParam('partials', $partials);
+    }
+
+    /**
+     * Filter search filters.
+     *
+     * @param Event $event
+     */
+    public function filterSearchFilters(Event $event)
+    {
+        $translate = $event->getTarget()->plugin('translate');
+        $query = $event->getParam('query', []);
+        $filters = $event->getParam('filters');
+
+        if (isset($query['is_archive'])) {
+            $value = $query['is_archive'];
+            if ($value) {
+                $filterLabel = $translate('Is archive'); // @translate
+                $filters[$filterLabel][] = $translate('yes'); // @translate
+            } elseif ($value !== '') {
+                $filterLabel = $translate('Is archive'); // @translate
+                $filters[$filterLabel][] = $translate('no'); // @translate
+            }
+        }
+
+        $event->setParam('filters', $filters);
+    }
+
+    /**
+     * Build query to check if an item is an archive or not.
+     *
+     * The argument uses "is_archive", with value "1" or "0".
+     *  It is an archive if it has "ead:ead" set and not empty.
+     *
+     * @param QueryBuilder $qb
+     * @param AbstractResourceEntityAdapter $adapter
+     * @param array $query
+     */
+    protected function searchIsArchive(
+        QueryBuilder $qb,
+        AbstractResourceEntityAdapter $adapter,
+        array $query
+    ) {
+        if (!isset($query['is_archive'])) {
+            return;
+        }
+
+        $value = (string) $query['is_archive'];
+        if ($value === '') {
+            return;
+        }
+
+        $expr = $qb->expr();
+
+        $valuesJoin = $adapter->getEntityClass() . '.values';
+
+        $property = $adapter->getPropertyByTerm('ead:ead');
+        $propertyId = $property ? $property->getId() : 0;
+
+        $joinConditions = [];
+        $valuesAlias = $adapter->createAlias();
+        $predicateExpr = $expr->isNotNull("$valuesAlias.id");
+        $joinConditions[] = $expr->eq("$valuesAlias.property", (int) $propertyId);
+        $qb->leftJoin($valuesJoin, $valuesAlias, 'WITH', $expr->andX(...$joinConditions));
+        $predicateExpr2 = $expr->notIn("$valuesAlias.value", ['0', 'false']);
+        $where = '(' . $predicateExpr . ') AND (' . $predicateExpr2 . ')';
+
+        $qb->andWhere($where);
     }
 
     protected function installResources()
