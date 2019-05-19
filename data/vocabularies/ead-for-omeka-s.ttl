@@ -22,6 +22,10 @@ ead:Component a owl:Class ;
     rdfs:comment "A single unit inside a catalog of documents, or a piece of an archival funds. May contain units itself."@en .
 
 
+ead:ead a rdf:Property ;
+    rdfs:label "Is EAD archive"@en ;
+    rdfs:comment "Indicates that the resource is an archive managed with the standard EAD."@en .
+
 ead:dsc a rdf:Property ;
     rdfs:label "Description of Subordinate Components"@en ;
     rdfs:comment "Description of subordinate components"@en .

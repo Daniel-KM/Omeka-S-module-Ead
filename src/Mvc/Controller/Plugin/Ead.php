@@ -88,8 +88,8 @@ class Ead extends AbstractPlugin
     /**
      * This item is an Ead archive if it's a finding aid or if it belongs to one.
      *
-     * Required properties when a class "ead" is not set are dcterms:isPartOf
-     * and dcterms:referencedBy.
+     * Required properties when a class "ead" is not set are ead:ead, dcterms:isPartOf
+     * or dcterms:referencedBy.
      * For performance reason, it is recommended to use dcterms:referencedBy
      * currently, with a reference to the item that is a finding aid.
      *
@@ -105,11 +105,15 @@ class Ead extends AbstractPlugin
             $class = $this->resourceClassName($this->item);
             $this->isArchive = in_array($class, [self::ROOT_CLASS, self::ITEM_CLASS, 'ead:ArchivalDescription']);
             if (!$this->isArchive) {
-                $this->isArchive = (bool) $this->resourceWithClassFromValue($this->item, 'dcterms:referencedBy', self::ROOT_CLASS);
+                $value = $this->item->value('ead:ead', ['type' => 'literal', 'default' => false]);
+                $this->isArchive = $value && $value->value();
                 if (!$this->isArchive) {
-                    $root = $this->root();
-                    $this->isArchive = $root
-                        && $this->resourceClassName($root) === self::ROOT_CLASS;
+                    $this->isArchive = (bool) $this->resourceWithClassFromValue($this->item, 'dcterms:referencedBy', self::ROOT_CLASS);
+                    if (!$this->isArchive) {
+                        $root = $this->root();
+                        $this->isArchive = $root
+                            && $this->resourceClassName($root) === self::ROOT_CLASS;
+                    }
                 }
             }
         }
@@ -154,10 +158,13 @@ class Ead extends AbstractPlugin
             if ($this->resourceClassName($this->item) === self::ITEM_CLASS) {
                 $this->isComponent = true;
             } else {
-                $root = $this->root();
-                $this->isComponent = $root
-                     ? $this->resourceClassName($root) === self::ROOT_CLASS
-                     : false;
+                $this->isComponent = $this->item->value('ead:ead', ['type' => 'literal', 'default' => false]);
+                if (!$this->isComponent) {
+                    $root = $this->root();
+                    $this->isComponent = $root
+                        ? $this->resourceClassName($root) === self::ROOT_CLASS
+                        : false;
+                }
             }
         }
         return $this->isComponent;

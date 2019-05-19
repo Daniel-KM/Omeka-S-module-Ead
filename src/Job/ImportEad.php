@@ -401,9 +401,20 @@ class ImportEad extends AbstractJob
     protected function completeDocuments()
     {
         $bulk = $this->bulk();
+        $eadPropertyId = $bulk->getPropertyId('ead:ead');
 
         foreach ($this->resources as &$resource) {
             $data = $resource['metadata'];
+
+            // Simplify the searches in ead.
+            $data['ead:ead'][] = [
+                'property_id' => $eadPropertyId,
+                'type' => 'literal',
+                '@language' => '',
+                '@value' => '1',
+                'is_public' => true,
+            ];
+
             if (!empty($resource['extra']['itemType'])
                 && isset($this->mapItemTypeToClasses[$resource['extra']['itemType']])
             ) {
@@ -429,7 +440,6 @@ class ImportEad extends AbstractJob
             }
             $data['files'] = $filesData;
             $resource['metadata'] = $data;
-
         }
     }
 
