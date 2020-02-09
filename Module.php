@@ -28,7 +28,11 @@ namespace Ead;
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-require_once dirname(__DIR__) . '/Generic/AbstractModule.php';
+if (!class_exists(\Generic\AbstractModule::class)) {
+    require file_exists(dirname(__DIR__) . '/Generic/AbstractModule.php')
+        ? dirname(__DIR__) . '/Generic/AbstractModule.php'
+        : __DIR__ . '/src/Generic/AbstractModule.php';
+}
 
 use Doctrine\ORM\QueryBuilder;
 use Generic\AbstractModule;
@@ -213,7 +217,11 @@ class Module extends AbstractModule
 
     protected function installResources()
     {
-        require_once dirname(__DIR__) . '/Generic/InstallResources.php';
+        if (!class_exists(\Generic\InstallResources::class)) {
+            require_once file_exists(dirname(__DIR__) . '/Generic/InstallResources.php')
+                ? dirname(__DIR__) . '/Generic/InstallResources.php'
+                : __DIR__ . '/src/Generic/InstallResources.php';
+        }
 
         $services = $this->getServiceLocator();
         $installResources = new \Generic\InstallResources($services);
