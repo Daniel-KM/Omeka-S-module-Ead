@@ -133,6 +133,11 @@ class ImportEad extends AbstractJob
      */
     protected $indexItem = 0;
 
+    /**
+     * @var \Omeka\Mvc\Controller\Plugin\Logger
+     */
+    protected $logger;
+
     public function perform()
     {
         $this->xslMain = dirname(dirname(__DIR__)) . $this->xslMain;
