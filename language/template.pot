@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-13 00:00+0200\n"
+"POT-Creation-Date: 2020-02-17 00:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,47 +17,69 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: view/common/ead-list.phtml:18
-msgid "Sub-components"
+#: Module.php:165 Module.php:168 view/common/advanced-search/ead.phtml:6
+#: view/common/advanced-search/ead.phtml:21
+msgid "Is archive"
 msgstr ""
 
-#: view/common/ead-list.phtml:19
-msgid "Related components"
+#: src/Generic/AbstractModule.php:542
+#, php-format
+msgid "This module requires the module \"%s\"."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:562
+#, php-format
+msgid "This module requires modules \"%s\"."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:630
+#, php-format
+msgid ""
+"The module \"%s\" was automatically deactivated because the dependencies are "
+"unavailable."
 msgstr ""
 
 #: view/common/ead-list.phtml:20
-msgid "Sibling components"
+msgid "Sub-components"
 msgstr ""
 
 #: view/common/ead-list.phtml:21
+msgid "Related components"
+msgstr ""
+
+#: view/common/ead-list.phtml:22 view/common/ead-list.phtml:24
+msgid "Sibling components"
+msgstr ""
+
+#: view/common/ead-list.phtml:25
 msgid "Ascendant components"
 msgstr ""
 
-#: view/common/ead-list.phtml:22
+#: view/common/ead-list.phtml:26
 msgid "Descendant components"
 msgstr ""
 
-#: view/common/ead-list.phtml:23
+#: view/common/ead-list.phtml:27
 msgid "Linked components"
 msgstr ""
 
-#: view/common/ead-list.phtml:35 view/common/ead-tree.phtml:32
+#: view/common/ead-list.phtml:39 view/common/ead-tree.phtml:32
 msgid "No component."
 msgstr ""
 
-#: view/common/ead-single.phtml:18 view/common/ead-single.phtml:19
+#: view/common/ead-single.phtml:20 view/common/ead-single.phtml:21
 msgid "Archival finding aid"
 msgstr ""
 
-#: view/common/ead-single.phtml:20
+#: view/common/ead-single.phtml:22
 msgid "Archival description"
 msgstr ""
 
-#: view/common/ead-single.phtml:21
+#: view/common/ead-single.phtml:23
 msgid "Upper component"
 msgstr ""
 
-#: view/common/ead-single.phtml:22
+#: view/common/ead-single.phtml:24
 msgid "Specific component"
 msgstr ""
 
@@ -65,11 +87,11 @@ msgstr ""
 msgid "No content."
 msgstr ""
 
-#: view/common/ead-tree.phtml:18 view/common/ead-tree.phtml:20
+#: view/common/ead-tree.phtml:20 view/common/ead-tree.phtml:22
 msgid "Tree"
 msgstr ""
 
-#: view/common/ead-tree.phtml:19
+#: view/common/ead-tree.phtml:21
 msgid "Branch"
 msgstr ""
 
@@ -85,11 +107,15 @@ msgstr ""
 msgid "Upload a xml file or set the url of the EAD end point."
 msgstr ""
 
-#: Module.php:96
+#: view/common/advanced-search/ead.phtml:16
+msgid "Any"
+msgstr ""
+
+#: Module.php:235
 msgid "EAD for Omeka"
 msgstr ""
 
-#: Module.php:97
+#: Module.php:236
 msgid ""
 "An adaptation of the Encoded Archival Description (EAD) as a vocabulary. "
 "Only elements that can’t be easily mapped into Dublin Core Terms, mainly "
@@ -98,26 +124,68 @@ msgid ""
 msgstr ""
 
 #: src/Form/ImportForm.php:19
-msgid "EAD xml file"
+msgid "Action"
 msgstr ""
 
 #: src/Form/ImportForm.php:20
+msgid ""
+"The update and deletion of resources uses their original identifiers, so "
+"they should not be changed."
+msgstr ""
+
+#: src/Form/ImportForm.php:22
+msgid "Create new resources"
+msgstr ""
+
+#: src/Form/ImportForm.php:23
+msgid "Replace all data of resources"
+msgstr ""
+
+#: src/Form/ImportForm.php:24
+msgid "Delete resources"
+msgstr ""
+
+#: src/Form/ImportForm.php:25
+msgid "Skip entries (dry run)"
+msgstr ""
+
+#: src/Form/ImportForm.php:40
+msgid "Action on unidentified resources"
+msgstr ""
+
+#: src/Form/ImportForm.php:41
+msgid "What to do when a resource to update does not exist."
+msgstr ""
+
+#: src/Form/ImportForm.php:43
+msgid "Skip entry"
+msgstr ""
+
+#: src/Form/ImportForm.php:44
+msgid "Create a new resource"
+msgstr ""
+
+#: src/Form/ImportForm.php:57
+msgid "EAD xml file"
+msgstr ""
+
+#: src/Form/ImportForm.php:58
 msgid "The EAD is a simple xml file."
 msgstr ""
 
-#: src/Form/ImportForm.php:32
+#: src/Form/ImportForm.php:70
 msgid "EAD xml url"
 msgstr ""
 
-#: src/Form/ImportForm.php:33
+#: src/Form/ImportForm.php:71
 msgid "The EAD may be available via a end point."
 msgstr ""
 
-#: src/Form/ImportForm.php:45
+#: src/Form/ImportForm.php:83
 msgid "Base ids"
 msgstr ""
 
-#: src/Form/ImportForm.php:46
+#: src/Form/ImportForm.php:84
 msgid ""
 "Each item inside an EAD xml file is represented by a unique id, that is used "
 "to make relations between all items.\n"
@@ -128,43 +196,43 @@ msgid ""
 "file."
 msgstr ""
 
-#: src/Form/ImportForm.php:50
+#: src/Form/ImportForm.php:88
 msgid "Document uri"
 msgstr ""
 
-#: src/Form/ImportForm.php:51
+#: src/Form/ImportForm.php:89
 msgid "Filename"
 msgstr ""
 
-#: src/Form/ImportForm.php:52
+#: src/Form/ImportForm.php:90
 msgid "Filename without extension"
 msgstr ""
 
-#: src/Form/ImportForm.php:53
+#: src/Form/ImportForm.php:91
 msgid "Value of element \"eadid\""
 msgstr ""
 
-#: src/Form/ImportForm.php:54
+#: src/Form/ImportForm.php:92
 msgid "Attribute \"publicid\" of \"eadid\""
 msgstr ""
 
-#: src/Form/ImportForm.php:55
+#: src/Form/ImportForm.php:93
 msgid "Attribute \"identifier\" of \"eadid\""
 msgstr ""
 
-#: src/Form/ImportForm.php:56
+#: src/Form/ImportForm.php:94
 msgid "Attribute \"url\" of \"eadid\""
 msgstr ""
 
-#: src/Form/ImportForm.php:57
+#: src/Form/ImportForm.php:95
 msgid "Custom, in the field below"
 msgstr ""
 
-#: src/Form/ImportForm.php:72
+#: src/Form/ImportForm.php:110
 msgid "Custom base ids"
 msgstr ""
 
-#: src/Form/ImportForm.php:73
+#: src/Form/ImportForm.php:111
 msgid ""
 "If \"custom\" is selected, specify the base ids to use, one by line, for "
 "each EAD xml file.\n"
@@ -173,15 +241,15 @@ msgid ""
 "element: \"publicid\", \"identifier\" or \"url\"."
 msgstr ""
 
-#: src/Form/ImportForm.php:79
+#: src/Form/ImportForm.php:117
 msgid "attribute value = base id of the file"
 msgstr ""
 
-#: src/Form/ImportForm.php:87
+#: src/Form/ImportForm.php:125
 msgid "Fix namespace/doctype"
 msgstr ""
 
-#: src/Form/ImportForm.php:88
+#: src/Form/ImportForm.php:126
 msgid ""
 "Some parsers don’t support the use of a doctype or require a namespace. Some "
 "servers don’t allow to fetch an external dtd, for example if the server is "
@@ -189,7 +257,7 @@ msgid ""
 "issue."
 msgstr ""
 
-#: src/Form/ImportForm.php:119
+#: src/Form/ImportForm.php:157
 msgid ""
 "Each base id, one by line, should have a name separated from the value with "
 "a \"=\"."
@@ -248,171 +316,308 @@ msgid ""
 "may take a while."
 msgstr ""
 
-#: src/Controller/Admin/EadController.php:179
+#: src/Controller/Admin/EadController.php:184
 msgid ""
-"The process is done in two steps: import of all pieces as items, then "
+"The process is done in two steps: extraction of all pieces as items, then "
 "creation of the tree structure to link them."
 msgstr ""
 
-#: src/Controller/Admin/EadController.php:181
-msgid "Import start failed"
+#: src/Controller/Admin/EadController.php:187
+msgid ""
+"The process is done in two steps: extraction of all pieces as items, then "
+"deletion."
 msgstr ""
 
-#: src/Controller/Admin/EadController.php:295
-#: src/Controller/Admin/EadController.php:316
+#: src/Controller/Admin/EadController.php:192
+msgid ""
+"The process is done in two steps: extraction of all pieces as items, then "
+"process of the tree structure to link them."
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:195
+msgid "Process start failed"
+msgstr ""
+
+#: src/Controller/Admin/EadController.php:309
+#: src/Controller/Admin/EadController.php:330
 msgid "Missing temporary directory configuration"
 msgstr ""
 
-#: src/Job/ArchiveFolder/Tool/ManagePaths.php:44
+#: src/Job/ArchiveFolder/Tool/ManagePaths.php:43
 msgid "The main uri should be set to use the class \"ManagePaths\"."
 msgstr ""
 
-#: src/Job/ArchiveFolder/Tool/ManagePaths.php:310
+#: src/Job/ArchiveFolder/Tool/ManagePaths.php:309
 #, php-format
 msgid "The file path \"%s\" is not correct."
 msgstr ""
 
-#: src/Job/ImportEad.php:142
-msgid "Import started"
-msgstr ""
-
-#: src/Job/ImportEad.php:146
-msgid "No file submitted."
+#: src/Job/ImportEad.php:148
+msgid "Process started"
 msgstr ""
 
 #: src/Job/ImportEad.php:152
+msgid "No file submitted."
+msgstr ""
+
+#: src/Job/ImportEad.php:158
 msgid "Unable to cache file."
 msgstr ""
 
-#: src/Job/ImportEad.php:157
+#: src/Job/ImportEad.php:163
 msgid "File is empty."
 msgstr ""
 
-#: src/Job/ImportEad.php:181
+#: src/Job/ImportEad.php:187
 msgid ""
 "The source contains entities and cannot be processed automatically currently."
 msgstr ""
 
-#: src/Job/ImportEad.php:186
+#: src/Job/ImportEad.php:192
 msgid "The source contains a doctype that has been removed."
 msgstr ""
 
-#: src/Job/ImportEad.php:205
+#: src/Job/ImportEad.php:214
+msgid "No action set: use \"create\"."
+msgstr ""
+
+#: src/Job/ImportEad.php:218
 msgid "Starting import of {number} converted resources."
 msgstr ""
 
-#: src/Job/ImportEad.php:213
+#: src/Job/ImportEad.php:223 src/Job/ImportEad.php:239
 msgid "Starting creation of links between archival components."
 msgstr ""
 
-#: src/Job/ImportEad.php:219
+#: src/Job/ImportEad.php:227
 msgid "Import of {number} converted resources completed."
 msgstr ""
 
-#: src/Job/ImportEad.php:223
-msgid "Import completed"
+#: src/Job/ImportEad.php:234
+msgid "Starting update of {number} converted resources."
 msgstr ""
 
-#: src/Job/ImportEad.php:270 src/Job/ImportEad.php:309
-#: src/Job/ImportEad.php:322 src/Job/ImportEad.php:333
+#: src/Job/ImportEad.php:243
+msgid "Update of {number} converted resources completed."
+msgstr ""
+
+#: src/Job/ImportEad.php:250
+msgid "The source contains {number} resources to be deleted."
+msgstr ""
+
+#: src/Job/ImportEad.php:253
+msgid "Starting deletion of matching resources."
+msgstr ""
+
+#: src/Job/ImportEad.php:256
+msgid "Deletion of {number} resources completed."
+msgstr ""
+
+#: src/Job/ImportEad.php:263
+msgid "The source contains {number} resources that can be converted."
+msgstr ""
+
+#: src/Job/ImportEad.php:269
+msgid "Process completed"
+msgstr ""
+
+#: src/Job/ImportEad.php:316 src/Job/ImportEad.php:355
+#: src/Job/ImportEad.php:368 src/Job/ImportEad.php:379
 msgid "filepath"
 msgstr ""
 
-#: src/Job/ImportEad.php:289
+#: src/Job/ImportEad.php:335
 msgid ""
 "Error during copy of the configuration file from \"{filepath}\" into "
 "\"{filepath2}\"."
 msgstr ""
 
-#: src/Job/ImportEad.php:303
+#: src/Job/ImportEad.php:349
 msgid ""
 "Error during update of the element \"baseid\" in the configuration file "
 "\"{filepath}\"."
 msgstr ""
 
-#: src/Job/ImportEad.php:317
+#: src/Job/ImportEad.php:363
 msgid ""
 "An empty file was the result of the first conversion. Check your input file "
 "and your params."
 msgstr ""
 
-#: src/Job/ImportEad.php:328
+#: src/Job/ImportEad.php:374
 msgid ""
 "An empty file was the result of the second conversion. Check your input file "
 "and your params."
 msgstr ""
 
-#: src/Job/ImportEad.php:348
+#: src/Job/ImportEad.php:393
 msgid ""
 "No resources were created after conversion of the input file into Omeka "
 "items."
 msgstr ""
 
-#: src/Job/ImportEad.php:401
+#: src/Job/ImportEad.php:475 src/Job/ImportEad.php:525
 msgid "Index #{index}: Item #{item_id} created."
 msgstr ""
 
-#: src/Job/ImportEad.php:406
+#: src/Job/ImportEad.php:480 src/Job/ImportEad.php:530
 msgid "Index #{index}: Unable to create an item."
 msgstr ""
 
-#: src/Job/ImportEad.php:431
+#: src/Job/ImportEad.php:513
+msgid ""
+"Index #{index}: no resource or duplicate resources found, so it is skipped."
+msgstr ""
+
+#: src/Job/ImportEad.php:542
+msgid "Index #{index}: Item #{item_id} updated."
+msgstr ""
+
+#: src/Job/ImportEad.php:547
+msgid "Index #{index}: Unable to update item #{item_id}."
+msgstr ""
+
+#: src/Job/ImportEad.php:571
+msgid "Index #{index}: the metadata have no identifier."
+msgstr ""
+
+#: src/Job/ImportEad.php:579
+msgid ""
+"Index #{index}: no resource or duplicate resources found, so it cannot be "
+"deleted."
+msgstr ""
+
+#: src/Job/ImportEad.php:588
+msgid "Index #{index}: Item #{item_id} deleted."
+msgstr ""
+
+#: src/Job/ImportEad.php:607
+msgid "dcterms:identifier"
+msgstr ""
+
+#: src/Job/ImportEad.php:655
 msgid "Index #{index}: item #{item_id} has no identifier."
 msgstr ""
 
-#: src/Job/ImportEad.php:445
+#: src/Job/ImportEad.php:669
 msgid ""
 "Index #{index}: duplicate identifier \"{identifier}\" for item #{item_id} "
 "and item #{itemId}."
 msgstr ""
 
-#: src/Job/ImportEad.php:457
+#: src/Job/ImportEad.php:681
 msgid ""
 "This import has no identifier, so no link can be created between component."
 msgstr ""
 
-#: src/Job/ImportEad.php:611
+#: src/Job/ImportEad.php:836
 #, php-format
 msgid "The EAD file \"%s\" cannot be processed [last step]."
 msgstr ""
 
-#: src/Job/ImportEad.php:1279
+#: src/Job/ImportEad.php:1504
 #, php-format
 msgid "The file \"%s\" inside document \"%s\" is incorrect."
 msgstr ""
 
-#: src/Job/ImportEad.php:1291
+#: src/Job/ImportEad.php:1516
 #, php-format
 msgid "The file path \"%s\" is incorrect."
 msgstr ""
 
-#: src/Job/ImportEad.php:1376
+#: src/Job/ImportEad.php:1601
 #, php-format
 msgid "The record type \"%s\" is not managed."
 msgstr ""
 
-#: src/Job/ImportEad.php:1397
+#: src/Job/ImportEad.php:1622
 msgid "action"
 msgstr ""
 
-#: src/Job/ImportEad.php:1431
+#: src/Job/ImportEad.php:1656
 msgid "path"
 msgstr ""
 
-#: src/Job/ImportEad.php:1484
+#: src/Job/ImportEad.php:1709
 msgid "collection_id"
 msgstr ""
 
-#: src/Job/ImportEad.php:1510
+#: src/Job/ImportEad.php:1735
 #, php-format
 msgid "The item type \"%s\" does not exist."
 msgstr ""
 
-#: src/Job/ImportEad.php:1521
+#: src/Job/ImportEad.php:1746
 #, php-format
 msgid "The item type id \"%d\" does not exist."
 msgstr ""
 
+#: src/Generic/InstallResources.php:76
+#, php-format
+msgid "The file \"%s\" cannot be read. Check your file system."
+msgstr ""
+
+#: src/Generic/InstallResources.php:102
+#, php-format
+msgid ""
+"An error occured when adding the prefix \"%s\": another vocabulary exists. "
+"Resolve the conflict before installing this module."
+msgstr ""
+
+#: src/Generic/InstallResources.php:132
+#, php-format
+msgid ""
+"A resource template named \"%s\" exists: rename it or remove it before "
+"installing this module."
+msgstr ""
+
+#: src/Generic/InstallResources.php:162
+msgid "The current version of this module requires the module Custom Vocab."
+msgstr ""
+
+#: src/Generic/InstallResources.php:169
+#, php-format
+msgid ""
+"A custom vocab named \"%s\" exists and has not the needed terms: rename it "
+"or remove it before installing this module."
+msgstr ""
+
+#: src/Generic/InstallResources.php:179
+#, php-format
+msgid ""
+"A custom vocab named \"%s\" exists and has not the needed language (\"%s\"): "
+"check it or remove it before installing this module."
+msgstr ""
+
+#: src/Generic/InstallResources.php:219
+#, php-format
+msgid "The vocabulary \"%s\" was already installed and was kept."
+msgstr ""
+
+#: src/Generic/InstallResources.php:229
+#, php-format
+msgid ""
+"An error occured when adding the prefix \"%s\": another vocabulary exists "
+"with the same prefix. Resolve the conflict before installing this module."
+msgstr ""
+
+#: src/Generic/InstallResources.php:249
+#, php-format
+msgid ""
+"An error occured when adding the prefix \"%s\" and the associated "
+"properties: %s"
+msgstr ""
+
+#: src/Generic/InstallResources.php:279
+#, php-format
+msgid "The resource template named \"%s\" is already available and is skipped."
+msgstr ""
+
+#: src/Generic/InstallResources.php:304 src/Generic/InstallResources.php:437
+#, php-format
+msgid "The custom vocab named \"%s\" is not available."
+msgstr ""
+
 #: config/module.config.php:55
-msgid "EAD import"
+msgid "EAD curation"
 msgstr ""
