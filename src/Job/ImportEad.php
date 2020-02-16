@@ -212,6 +212,7 @@ class ImportEad extends AbstractJob
         switch ($action) {
             default:
                 $this->logger()->notice('No action set: use "create".'); // @translate
+                // no break
             case \BulkImport\Processor\AbstractProcessor::ACTION_CREATE:
                 $this->logger()->info(
                     'Starting import of {number} converted resources.', // @translate
