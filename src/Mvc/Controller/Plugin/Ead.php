@@ -345,7 +345,7 @@ class Ead extends AbstractPlugin
         $result = [];
         $result[] = [
             'self' => $this->item,
-            'children' => $this->recursiveBranch($item),
+            'children' => $this->recursiveBranch($this->item),
         ];
         return $result;
     }
