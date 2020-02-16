@@ -448,9 +448,11 @@ class Ead extends AbstractPlugin
             /** @var \Omeka\Api\Representation\ValueRepresentation $value */
             foreach ($values[$term]['values'] as $value) {
                 if (in_array($value->type(), ['resource', 'resource:item'])) {
-                    // Manage duplicates.
-                    $resource = $value->valueResource();
-                    $result[$resource->id()] = $resource;
+                    // Manage private resources.
+                    if ($resource = $value->valueResource()) {
+                        // Manage duplicates.
+                        $result[$resource->id()] = $resource;
+                    }
                 }
             }
         }
