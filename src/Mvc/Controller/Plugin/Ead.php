@@ -267,8 +267,6 @@ class Ead extends AbstractPlugin
     /**
      * Get the sibling items of this item (self not included).
      *
-     * To include this item, get the children (narrower iterms) of the broader
-     *
      * @return ItemRepresentation[]
      */
     public function siblings()
@@ -292,6 +290,29 @@ class Ead extends AbstractPlugin
                 unset($result[$key]);
                 break;
             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the sibling items of this item (self included).
+     *
+     * @return ItemRepresentation[]
+     */
+    public function siblingsOrSelf()
+    {
+        $result = [];
+
+        if ($this->isArchivalFindingAid() || $this->isArchivalDescription()) {
+            return $result;
+        }
+
+        $broader = $this->broader();
+        if ($broader) {
+            $result = $this->children($broader);
+        } else {
+            return $result;
         }
 
         return $result;

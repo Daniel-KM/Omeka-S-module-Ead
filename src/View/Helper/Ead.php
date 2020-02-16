@@ -33,6 +33,7 @@ class Ead extends AbstractHelper
      */
     public function __invoke(ItemRepresentation $item)
     {
+        $this->item = $item;
         $ead = $this->ead;
         $ead($item);
         return $this;
@@ -176,14 +177,25 @@ class Ead extends AbstractHelper
     /**
      * Get the sibling items of this item (self not included).
      *
-     * To include this item, get the children (narrower iterms) of the broader
-     *
      * @uses \Ead\Mvc\Controller\Plugin\Ead::siblings()
      * @return ItemRepresentation[]
      */
     public function siblings()
     {
         return $this->ead->siblings();
+    }
+
+    /**
+     * Get the sibling items of this item (self included).
+     *
+     * To include this item, get the children (narrower iterms) of the broader
+     *
+     * @uses \Ead\Mvc\Controller\Plugin\Ead::siblingsOrSelf()
+     * @return ItemRepresentation[]
+     */
+    public function siblingsOrSelf()
+    {
+        return $this->ead->siblingsOrSelf();
     }
 
     /**
@@ -253,6 +265,7 @@ class Ead extends AbstractHelper
                 'narrowers' => 'list',
                 'relateds' => 'list',
                 'siblings' => 'list',
+                'siblingsOrSelf' => 'list',
                 'ascendants' => 'list',
                 'descendants' => 'list',
                 'tree' => 'tree',

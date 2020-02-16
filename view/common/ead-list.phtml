@@ -20,6 +20,8 @@ else:
         'narrowers' => $translate('Sub-components'),
         'relateds' => $translate('Related components'),
         'siblings' => $translate('Sibling components'),
+        // The title is the same than siblings.
+        'siblingsOrSelf' => $translate('Sibling components'),
         'ascendants' => $translate('Ascendant components'),
         'descendants' => $translate('Descendant components'),
         'custom' => $translate('Linked components'),
@@ -27,6 +29,7 @@ else:
     $title = $title[$type];
 endif;
 
+$itemId = $item ? $item->id() : null;
 ?>
 <div class="ead ead-list">
     <h4><?= $title ?></h4>
@@ -37,7 +40,8 @@ endif;
     <?php else: ?>
     <ul>
         <?php foreach ($data as $concept): ?>
-        <li><?= $concept->linkPretty() ?></li>
+        <?php $isItem = $concept->id() === $itemId; ?>
+        <li<?php if ($isItem) echo ' class="active"'; ?>><?= $concept->linkPretty() ?></li>
         <?php endforeach; ?>
     </ul>
     <?php endif; ?>
