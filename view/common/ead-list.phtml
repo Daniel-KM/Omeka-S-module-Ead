@@ -31,7 +31,8 @@ endif;
 
 $itemId = $item ? $item->id() : null;
 ?>
-<div class="ead ead-list">
+
+<div class="ead ead-list <?= $options['class'] ?>">
     <h4><?= $title ?></h4>
     <?php if (empty($data)): ?>
     <p>
