@@ -13,7 +13,9 @@ if (empty($data) && !empty($options['hideIfEmpty'])):
     return;
 endif;
 
-if (empty($options['title'])):
+if (isset($options['title'])):
+    $title = $options['title'];
+else:
     $title = [
         'narrowers' => $translate('Sub-components'),
         'relateds' => $translate('Related components'),
@@ -23,8 +25,6 @@ if (empty($options['title'])):
         'custom' => $translate('Linked components'),
     ];
     $title = $title[$type];
-else:
-    $title = $options['title'];
 endif;
 
 ?>

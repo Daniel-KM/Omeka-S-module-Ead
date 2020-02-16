@@ -13,7 +13,9 @@ if (empty($data) && !empty($options['hideIfEmpty'])):
     return;
 endif;
 
-if (empty($options['title'])):
+if (isset($options['title'])):
+    $title = $options['title'];
+else:
     $title = [
         'root' => $translate('Archival finding aid'),
         'archivalFindingAid' => $translate('Archival finding aid'),
@@ -22,11 +24,9 @@ if (empty($options['title'])):
         'custom' =>  $translate('Specific component'),
     ];
     $title = $title[$type];
-else:
-    $title = $options['title'];
 endif;
-
 ?>
+
 <div class="ead ead-single">
     <h4><?= $title ?></h4>
     <?php if (empty($data)): ?>

@@ -13,18 +13,18 @@ if (empty($data) && !empty($options['hideIfEmpty'])):
     return;
 endif;
 
-if (empty($options['title'])):
+if (isset($options['title'])):
+    $title = $options['title'];
+else:
     $title = [
         'tree' => $translate('Tree'),
         'branch' => $translate('Branch'),
         'custom' => $translate('Tree'),
     ];
     $title = $title[$type];
-else:
-    $title = $options['title'];
 endif;
-
 ?>
+
 <div class="ead ead-tree">
     <h4><?= $title ?></h4>
     <?php if (empty($data)): ?>
