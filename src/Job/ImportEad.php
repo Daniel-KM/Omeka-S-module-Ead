@@ -773,7 +773,6 @@ class ImportEad extends AbstractJob
                 $xpath = '/ead:ead/ead:eadheader/ead:eadid';
                 $result = $this->xml->xpath($xpath);
                 $result = json_decode(json_encode($result), true);
-pmf($result);
                 $result = $result[0]['@attributes'];
                 $result = array_intersect(array_keys($baseIds), $result);
                 if ($result) {
