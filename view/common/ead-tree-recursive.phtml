@@ -3,14 +3,16 @@
  * @var \Zend\View\Renderer\PhpRenderer $this
  * @var \Omeka\Api\Representation\ItemRepresentation[] $data
  * @var array $options
+ * @var int $level
  */
 
 ?>
+
 <ul>
     <?php foreach ($data as $current): ?>
     <li><?= $current['self']->link($current['self']->displayTitle()) ?>
         <?php if (!empty($current['children'])): ?>
-        <?= $this->partial('common/ead-tree-recursive', ['data' => $current['children'], 'options' => $options]) ?>
+        <?= $this->partial('common/ead-tree-recursive', ['data' => $current['children'], 'level' => $level + 1, 'options' => $options]) ?>
         <?php endif; ?>
    </li>
    <?php endforeach; ?>

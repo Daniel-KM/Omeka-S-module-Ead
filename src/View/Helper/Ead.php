@@ -250,7 +250,7 @@ class Ead extends AbstractHelper
      * "relateds", "siblings", "ascendants", or "descendants" (list), or "tree"
      * or "branch" (tree).
      * @param array $options Options for the partial. Managed default are
-     * "title", "hideIfEmpty", "class", and "partial".
+     * "title", "hideIfEmpty", "class", "expanded", and "partial".
      * @return string
      */
     public function display($typeOrData, array $options = [])
@@ -291,7 +291,7 @@ class Ead extends AbstractHelper
             : $options['partial'];
         unset($options['partial']);
 
-        $options += ['title' => '', 'hideIfEmpty' => false, 'class' => ''];
+        $options += ['title' => '', 'hideIfEmpty' => false, 'class' => '', 'expanded' => 0];
 
         return $this->getView()->partial($partial, [
             'item' => $this->item,

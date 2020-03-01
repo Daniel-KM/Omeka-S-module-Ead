@@ -32,6 +32,6 @@ endif;
         <?= $translate('No component.') ?>
     </p>
     <?php else: ?>
-        <?= $this->partial('common/ead-tree-recursive', ['data' => $data, 'options' => $options]) ?>
+        <?= $this->partial('common/ead-tree-recursive', ['data' => $data, 'level' => 0, 'options' => $options]) ?>
     <?php endif; ?>
 </div>
