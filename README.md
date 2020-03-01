@@ -140,6 +140,8 @@ Copyright
 
 * Copyright Daniel Berthereau, 2015-2020 (see [Daniel-KM] on GitHub)
 
+The new version of the module was released for the site [Archives d’Arcy].
+
 
 [Omeka S]: https://omeka.org/s
 [EAD]: https://github.com/Daniel-KM/Omeka-S-module-EAD
@@ -150,6 +152,7 @@ Copyright
 [`Ead2DCterms`]: https://github.com/Daniel-KM/Ead2DCterms
 [`Ead.zip`]: https://github.com/Daniel-KM/Omeka-S-module-Ead/releases
 [`data/xsl`]: https://github.com/Daniel-KM/Omeka-S-module-Ead/tree/master/data/xsl
+[Archives d’Arcy]: https://versarcy.huma-num.fr
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
