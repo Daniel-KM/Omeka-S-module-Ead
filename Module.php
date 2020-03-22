@@ -199,7 +199,10 @@ class Module extends AbstractModule
 
         $expr = $qb->expr();
 
-        $valuesJoin = $adapter->getEntityClass() . '.values';
+        $isOldOmeka = \Omeka\Module::VERSION < 2;
+        $alias = $isOldOmeka ? $adapter->getEntityClass() : 'omeka_root';
+
+        $valuesJoin = $alias . '.values';
 
         $property = $adapter->getPropertyByTerm('ead:ead');
         $propertyId = $property ? $property->getId() : 0;
